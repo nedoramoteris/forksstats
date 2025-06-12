@@ -1,9 +1,5 @@
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
             background-color: #21211F;
             font-family: 'Montserrat', sans-serif;
             color: #6E6761;
@@ -184,4 +180,55 @@
         .dark-mode .back-button:hover {
             background-color: #e0e0e0;
         }
-    </style>
+   /* Race color classes */
+
+        .race-hunter {
+            color: #94655D;
+        }
+        .race-werewolf {
+            color: #434F3F;
+        }
+        .race-hybrid {
+            color: #524047;
+        }
+        .race-witch {
+            color: #405752;
+        }
+        .race-human {
+            color: #4C4957;
+        }
+        .race-vampire {
+            color: #944444;
+        }
+        .race-volturi {
+            color: #664E64;
+        }
+        .race-hunterwitch {
+            background-image: linear-gradient(to right, #94655D, #405752, #405752);
+  -webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+        }
+        .race-vampirehunter {
+           background-image: linear-gradient(to right, #7B403B, #94655D,#94655D);
+  -webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+        }
+        .race-vampirewitch {
+           background-image: linear-gradient(to right, #405752, #803131, #803131);
+  -webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+        }
+        .race-supernaturalhuman {
+            background-image: linear-gradient(to right, #756059, #4C4957, #4C4957);
+  -webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+        }
+        .race-hybridhunter {
+          background-image: linear-gradient(to right, #94655D, #524047, #524047);
+  -webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+        }
+        .race-pet {
+            color: #d4bc85;
+        }
+        
