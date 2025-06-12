@@ -11,6 +11,26 @@
             { id: 8, name: "Colleagues", color: "#80938e" }
         ];
 
+        // Race color mapping from main.js
+        const raceColors = {
+            'hunter': 'race-hunter',
+            'werewolf': 'race-werewolf',
+            'hybrid': 'race-hybrid',
+            'witch': 'race-witch',
+            'human': 'race-human',
+            'vampire': 'race-vampire',
+            'volturi': 'race-volturi',
+            'hunterwitch': 'race-hunterwitch',
+            'vampirehunter': 'race-vampirehunter',
+            'vampirewitch': 'race-vampirewitch',
+            'supernaturalhuman': 'race-supernaturalhuman',
+            'hybridhunter': 'race-hybridhunter',
+            'pet': 'race-pet'
+        };
+
+        // Global variable to store character races
+        let characterRaces = {};
+
         // Dark mode toggle functionality
         document.addEventListener("DOMContentLoaded", function () {
             const toggle = document.querySelector(".dark-mode-toggle");
@@ -33,13 +53,29 @@
                 }
             });
 
-            // Load and process data
-            fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
+            // First load character races, then load and process relationship data
+            fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/avatarai.txt')
+                .then(response => response.text())
+                .then(processRaceData)
+                .then(() => fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt'))
                 .then(response => response.text())
                 .then(processData)
                 .then(generateStatistics)
                 .catch(error => console.error("Error loading data:", error));
         });
+
+        function processRaceData(raceText) {
+            const lines = raceText.split('\n').filter(line => line.trim());
+            
+            lines.forEach(line => {
+                const parts = line.split('\t');
+                if (parts.length >= 3) {
+                    const name = parts[0].trim();
+                    const race = parts[2].trim().toLowerCase();
+                    characterRaces[name] = race;
+                }
+            });
+        }
 
         function processData(pointsText) {
             const lines = pointsText.split('\n').filter(line => line.trim());
@@ -48,7 +84,7 @@
             // Process each line to extract relationships
             lines.forEach(line => {
                 // Skip section headers
-                if (line.startsWith('-') ||  line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
+                if (line.startsWith('-') || line.startsWith('Natanielis Jaunesnysis') || line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
                     return;
                 }
                 
@@ -136,6 +172,12 @@
                     
                     const nameSpan = document.createElement('span');
                     nameSpan.className = 'stat-name';
+                    
+                    // Determine race class
+                    const race = characterRaces[item.name] || 'other';
+                    const raceClass = raceColors[race] || 'race-other';
+                    nameSpan.classList.add(raceClass);
+                    
                     nameSpan.textContent = item.name;
                     
                     const countSpan = document.createElement('span');
