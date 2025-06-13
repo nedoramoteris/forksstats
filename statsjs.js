@@ -60,7 +60,24 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(() => fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt'))
         .then(response => response.text())
         .then(processData)
-        .then(generateStatistics)
+        .then(relationships => {
+            generateStatistics(relationships); // Regular stats first
+                 const disclaimerBox = document.createElement('div');
+            disclaimerBox.className = 'zvaigzdute';
+            disclaimerBox.innerHTML = `
+                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
+            `;
+            document.getElementById('stats-container').appendChild(disclaimerBox);
+      
+            // Create a container for special stats
+            const specialStatsContainer = document.createElement('div');
+            specialStatsContainer.className = 'special-stats-container';
+            document.getElementById('stats-container').appendChild(specialStatsContainer);
+            
+            // Add controversial and promiscuous stats to the special container
+            generateControversialStats(relationships, specialStatsContainer);
+            generatePromiscuityStats(relationships, specialStatsContainer);
+        })
         .catch(error => console.error("Error loading data:", error));
 });
 
@@ -200,7 +217,7 @@ function generateStatistics(relationships) {
                 'Carmen Iscariot Denali': 964,
                 'Jonathan Fort Harlow': 101,
                 'Nathaniel Dean Harlow': 60,
-                'Michael Romeo Harlow': 206,
+                'Michael Romeo Harlow': 309,
                 'Venetia Irida Dragoumis': 3,
                 'Emery Herman Bernhard': 39,
                 'Randall Frank Dreschler': 495
@@ -250,10 +267,10 @@ function generateStatistics(relationships) {
             const countSpan = document.createElement('span');
             countSpan.className = 'stat-count';
             if (relType.id === 6) {
-    countSpan.innerHTML = `<span class="stat-total">${item.count}</span> <span class="stat-per-year">(${item.perYear}/yr)</span>`;
-} else {
-    countSpan.textContent = item.count;
-}
+                countSpan.innerHTML = `<span class="stat-total">${item.count}</span> <span class="stat-per-year">(${item.perYear}/yr)</span>`;
+            } else {
+                countSpan.textContent = item.count;
+            }
             
             statItem.appendChild(nameSpan);
             statItem.appendChild(countSpan);
@@ -263,4 +280,176 @@ function generateStatistics(relationships) {
         statBox.appendChild(listContainer);
         statsContainer.appendChild(statBox);
     });
+}
+
+function generateControversialStats(relationships, container) {
+    const controversyScores = {};
+    
+    // Calculate controversy score based only on enemies and frenemies
+    relationships.forEach(rel => {
+        if (rel.relationship === 4 || rel.relationship === 7) { // Frenemies or Enemies
+            // Both participants in the relationship get points
+            controversyScores[rel.source] = (controversyScores[rel.source] || 0) + 1;
+            controversyScores[rel.target] = (controversyScores[rel.target] || 0) + 1;
+        }
+    });
+    
+    // Prepare data for display - top 10 only
+    const displayData = Object.entries(controversyScores)
+        .map(([name, score]) => {
+            const race = characterData[name]?.race || 'other';
+            return { name, score, race };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+    
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box controversial-box';
+    statBox.style.width = '1150px';
+    
+    // Add section heading
+    
+    
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `
+        
+        <span class="toptenname">Top 10 Most Controversial Characters</span>
+    `;
+    statBox.appendChild(header);
+    
+    const description = document.createElement('div');
+    description.className = 'stat-description';
+    description.textContent = 'Characters with the most enemies and frenemies';
+    statBox.appendChild(description);
+    
+    const listContainer = document.createElement('div');
+    listContainer.className = 'stat-list';
+    
+    displayData.forEach((item, index) => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'stat-rank';
+        rankSpan.textContent = `${index + 1}.`;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = `stat-name ${raceColors[item.race] || 'race-other'}`;
+        nameSpan.textContent = item.name;
+        
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'stat-count';
+        scoreSpan.textContent = item.score;
+        
+        statItem.appendChild(rankSpan);
+        statItem.appendChild(nameSpan);
+        statItem.appendChild(scoreSpan);
+        listContainer.appendChild(statItem);
+    });
+    
+    statBox.appendChild(listContainer);
+    container.appendChild(statBox);
+}
+
+function generatePromiscuityStats(relationships, container) {
+    const promiscuityScores = {};
+    
+    // Calculate promiscuity score based on one night stands and friends with benefits
+    relationships.forEach(rel => {
+        if (rel.relationship === 5 || rel.relationship === 6) { // FWB or ONS
+            // Both participants in the relationship get points
+            promiscuityScores[rel.source] = (promiscuityScores[rel.source] || 0) + 1;
+            promiscuityScores[rel.target] = (promiscuityScores[rel.target] || 0) + 1;
+        }
+    });
+    
+    // Add the extra one night stands we defined earlier
+    const extraOneNightStands = {
+        'Katrina Deva Bianchi': 9,
+        'Hera Melody Harlow': 2,
+        'Lennon Therasia Windsor': 29,
+        'Valeria Euphemia Greco-Whitmore': 4,
+        'Carmen Iscariot Denali': 964,
+        'Jonathan Fort Harlow': 101,
+        'Nathaniel Dean Harlow': 60,
+        'Michael Romeo Harlow': 309,
+        'Venetia Irida Dragoumis': 3,
+        'Emery Herman Bernhard': 39,
+        'Randall Frank Dreschler': 495
+    };
+    
+    for (const [name, count] of Object.entries(extraOneNightStands)) {
+        promiscuityScores[name] = (promiscuityScores[name] || 0) + count;
+    }
+    
+    // Prepare data for display - now with perYear as a number for sorting
+    let displayData = Object.entries(promiscuityScores)
+        .map(([name, score]) => {
+            const race = characterData[name]?.race || 'other';
+            const birthDate = characterData[name]?.birthDate;
+            const perYearValue = parseFloat(calculatePerYearStats(score, birthDate)) || 0;
+            return { 
+                name, 
+                score, 
+                race, 
+                perYearValue,
+                perYear: isFinite(perYearValue) ? perYearValue.toFixed(2) : "∞"
+            };
+        })
+        .sort((a, b) => {
+            // Sort by perYearValue descending, then by total score descending
+            if (b.perYearValue !== a.perYearValue) {
+                return b.perYearValue - a.perYearValue;
+            }
+            return b.score - a.score;
+        })
+        .slice(0, 10);
+    
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box promiscuity-box';
+    statBox.style.width = '1150px';
+    
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `
+    
+        <span class="toptenname">Top 10 Sluttiest characters</span>
+    `;
+    statBox.appendChild(header);
+    
+    const description = document.createElement('div');
+    description.className = 'stat-description';
+    description.textContent = 'Characters with the most friends with benefits and one night stands**';
+    statBox.appendChild(description);
+    
+    const listContainer = document.createElement('div');
+    listContainer.className = 'stat-list';
+    
+    displayData.forEach((item, index) => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'stat-rank';
+        rankSpan.textContent = `${index + 1}.`;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = `stat-name ${raceColors[item.race] || 'race-other'}`;
+        nameSpan.textContent = item.name;
+        
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'stat-count';
+        scoreSpan.innerHTML = `<span class="stat-total">${item.perYear}/yr</span> <span class="stat-per-year">(${item.score} total)</span>`;
+        
+        statItem.appendChild(rankSpan);
+        statItem.appendChild(nameSpan);
+        statItem.appendChild(scoreSpan);
+        listContainer.appendChild(statItem);
+    });
+    
+    statBox.appendChild(listContainer);
+    container.appendChild(statBox);
 }
