@@ -28,8 +28,8 @@ const raceColors = {
     'pet': 'race-pet'
 };
 
-// Global variable to store character races
-let characterRaces = {};
+// Global variable to store character data
+let characterData = {};
 
 // Dark mode toggle functionality
 document.addEventListener("DOMContentLoaded", function () {
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // First load character races, then load and process relationship data
+    // First load character data, then load and process relationship data
     fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/avatarai.txt')
         .then(response => response.text())
         .then(processRaceData)
@@ -69,10 +69,15 @@ function processRaceData(raceText) {
     
     lines.forEach(line => {
         const parts = line.split('\t');
-        if (parts.length >= 3) {
+        if (parts.length >= 4) {
             const name = parts[0].trim();
             const race = parts[2].trim().toLowerCase();
-            characterRaces[name] = race;
+            const birthDate = parts[3].trim();
+            
+            characterData[name] = {
+                race: race,
+                birthDate: birthDate
+            };
         }
     });
 }
@@ -110,32 +115,53 @@ function processData(pointsText) {
     return relationships;
 }
 
+function calculatePerYearStats(count, birthDate) {
+    const currentYear = new Date().getFullYear();
+    
+    if (!birthDate) return "unknown";
+    
+    // Handle BC dates (format like "300 BC")
+    if (birthDate.includes("BC")) {
+        const bcYear = parseInt(birthDate.split("BC")[0].trim());
+        if (isNaN(bcYear)) return "unknown";
+        
+        const age = currentYear + bcYear;
+        const yearsActive = Math.max(0, age - 16);
+        return yearsActive > 0 ? (count / yearsActive).toFixed(2) : "∞";
+    } 
+    
+    // Handle regular dates (format like "1985-05-15" or just "1985")
+    const birthYear = parseInt(birthDate.split('-')[0]);
+    if (isNaN(birthYear)) return "unknown";
+    
+    const age = currentYear - birthYear;
+    const yearsActive = Math.max(0, age - 16);
+    return yearsActive > 0 ? (count / yearsActive).toFixed(2) : "∞";
+}
+
 function generateStatistics(relationships) {
     const statsContainer = document.getElementById('stats-container');
+    statsContainer.innerHTML = ''; // Clear previous content
     
     // Create a stats box for each relationship type
     relationshipTypes.forEach(relType => {
         // Count relationships for this type
         const relCounts = {};
-        const processedPairs = new Set(); // To track all processed relationships
+        const processedPairs = new Set();
         
         relationships.forEach(rel => {
             if (rel.relationship === relType.id) {
-                // Create a unique key for this relationship pair (sorted to avoid duplicates)
                 const pairKey = [rel.source, rel.target].sort().join('|');
                 
-                // Only process if we haven't seen this pair before
                 if (!processedPairs.has(pairKey)) {
                     processedPairs.add(pairKey);
-                    
-                    // Count each participant once per unique relationship
                     relCounts[rel.source] = (relCounts[rel.source] || 0) + 1;
                     relCounts[rel.target] = (relCounts[rel.target] || 0) + 1;
                 }
             }
         });
         
-        // Special handling for Friends (id:1) - combine all Draugai pairs
+        // Special handling for Friends
         if (relType.id === 1) {
             const draugaiPairs = [
                 { main: 'Katrina Deva Bianchi', draugai: 'Katrinos Draugai' },
@@ -149,73 +175,85 @@ function generateStatistics(relationships) {
             
             draugaiPairs.forEach(pair => {
                 if (relCounts[pair.main] || relCounts[pair.draugai]) {
-                    const mainCount = (relCounts[pair.main] || 0);
-                    const draugaiCount = (relCounts[pair.draugai] || 0);
-                    const combinedCount = mainCount + draugaiCount;
-                    
-                    // Remove individual entries
+                    const combinedCount = (relCounts[pair.main] || 0) + (relCounts[pair.draugai] || 0);
                     delete relCounts[pair.main];
                     delete relCounts[pair.draugai];
-                    
-                    // Add combined entry if count is positive
-                    if (combinedCount > 0) {
-                        relCounts[pair.main] = combinedCount;
-                    }
+                    if (combinedCount > 0) relCounts[pair.main] = combinedCount;
                 }
             });
             
-            // Special case: subtract 2 from Katrina's total
-            if (relCounts['Katrina Deva Bianchi']) {
-                relCounts['Katrina Deva Bianchi'] = Math.max(0, relCounts['Katrina Deva Bianchi'] - 2);
+            ['Katrina Deva Bianchi', 'Arya Natalie Davenport', 'West Elliot Harlow', 
+             'Leone Battista Dalmonte', 'Lennon Therasia Windsor'].forEach(character => {
+                if (relCounts[character]) {
+                    relCounts[character] = Math.max(0, relCounts[character] - 2);
+                }
+            });
+        }
+        
+        // Add extra one night stands
+        if (relType.id === 6) {
+            const extraCounts = {
+                'Katrina Deva Bianchi': 9,
+                'Hera Melody Harlow': 2,
+                'Lennon Therasia Windsor': 29,
+                'Valeria Euphemia Greco-Whitmore': 4,
+                'Carmen Iscariot Denali': 964,
+                'Jonathan Fort Harlow': 101,
+                'Nathaniel Dean Harlow': 60,
+                'Michael Romeo Harlow': 206,
+                'Venetia Irida Dragoumis': 3,
+                'Emery Herman Bernhard': 39,
+                'Randall Frank Dreschler': 495
+            };
+            
+            for (const [name, count] of Object.entries(extraCounts)) {
+                relCounts[name] = (relCounts[name] || 0) + count;
             }
         }
         
-        // Convert to array and sort by count
-        const sortedCounts = Object.entries(relCounts)
-            .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count);
+        // Prepare data for display
+        let displayData = Object.entries(relCounts).map(([name, count]) => {
+            const race = characterData[name]?.race || 'other';
+            const displayItem = { name, count, race };
+            
+            if (relType.id === 6) {
+                const birthDate = characterData[name]?.birthDate;
+                displayItem.perYear = calculatePerYearStats(count, birthDate);
+            }
+            
+            return displayItem;
+        }).sort((a, b) => b.count - a.count);
         
         // Create the stats box
         const statBox = document.createElement('div');
         statBox.className = 'stat-box';
         
-        // Create header with colored indicator
         const header = document.createElement('div');
         header.className = 'stat-header';
-        
-        const colorIndicator = document.createElement('div');
-        colorIndicator.className = 'stat-header-color';
-        colorIndicator.style.background = relType.color;
-        
-        const title = document.createElement('span');
-        title.textContent = relType.name;
-        
-        header.appendChild(colorIndicator);
-        header.appendChild(title);
+        header.innerHTML = `
+            <div class="stat-header-color" style="background:${relType.color}"></div>
+            <span>${relType.name}</span>
+        `;
         statBox.appendChild(header);
         
-        // Create scrollable list container
         const listContainer = document.createElement('div');
         listContainer.className = 'stat-list';
         
-        // Add all characters in descending order
-        sortedCounts.forEach(item => {
+        displayData.forEach(item => {
             const statItem = document.createElement('div');
             statItem.className = 'stat-item';
             
             const nameSpan = document.createElement('span');
-            nameSpan.className = 'stat-name';
-            
-            // Determine race class
-            const race = characterRaces[item.name] || 'other';
-            const raceClass = raceColors[race] || 'race-other';
-            nameSpan.classList.add(raceClass);
-            
+            nameSpan.className = `stat-name ${raceColors[item.race] || 'race-other'}`;
             nameSpan.textContent = item.name;
             
             const countSpan = document.createElement('span');
             countSpan.className = 'stat-count';
-            countSpan.textContent = item.count;
+            if (relType.id === 6) {
+    countSpan.innerHTML = `<span class="stat-total">${item.count}</span> <span class="stat-per-year">(${item.perYear}/yr)</span>`;
+} else {
+    countSpan.textContent = item.count;
+}
             
             statItem.appendChild(nameSpan);
             statItem.appendChild(countSpan);
