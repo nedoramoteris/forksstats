@@ -6,7 +6,7 @@ const relationshipTypes = [
     { id: 3, name: "Romantic Partners", color: "#934343" },
     { id: 4, name: "Frenemies", color: "#786fad" },
     { id: 5, name: "Friends with Benefits", color: "#c57090" },
-    { id: 6, name: "One Night Stands", color: "white" },
+    { id: 6, name: "One Night Stands*", color: "white" },
     { id: 7, name: "Enemies", color: "#00858b" },
     { id: 8, name: "Colleagues", color: "#80938e" }
 ];
