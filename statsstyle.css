@@ -17,7 +17,9 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
+.toptenname {background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;}
         h1 {
             font-family: 'Lemon/Milk light', sans-serif;
             letter-spacing: 1px;
@@ -234,12 +236,80 @@
 .zvaigzdute {background: #292725;
             border-radius: 7px;
             padding: 15px;
-  font-size:10px;
+  font-size:12px;
   width: 1150px;
-margin-top:20px;
+margin-top:10px;
 margin-left: auto;
     margin-right: auto;}
 .dark-mode .zvaigzdute {background: #f5f5f5;}
 .stat-per-year {
     font-size: 0.7em;
+}
+
+/* Top 10 Lists Styling */
+.controversial-box, .promiscuity-box {
+    margin: 20px auto;
+    order: -1; /* Make them appear first */
+  overflow: auto;
+}
+
+.dark-mode .controversial-box, 
+.dark-mode .promiscuity-box {
+    border-color: #e0e0e0;
+    
+}
+
+.stat-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 2px solid;
+}
+
+.controversial-box .stat-header {
+    border-bottom-color: #6E6761;
+}
+
+.promiscuity-box .stat-header {
+    border-bottom-color: #6E6761;
+}
+
+.stat-description {
+    font-size: 12px;
+    margin-bottom: 15px;
+   
+}
+
+.dark-mode .stat-description {
+    color: #666;
+}
+
+.stat-rank {
+    display: inline-block;
+    width: 25px;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+
+
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .controversial-box, .promiscuity-box {
+        width: 100% !important;
+    }
+}
+
+/* Animation for hover effects */
+.stat-item {
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateX(5px);
 }
