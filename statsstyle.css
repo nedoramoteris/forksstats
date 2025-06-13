@@ -54,7 +54,6 @@
             margin-bottom: 15px;
             padding-bottom: 8px;
             border-bottom: 1px solid #444;
-            color: #f0f0f0;
             display: flex;
             align-items: center;
         }
@@ -232,3 +231,15 @@
             color: #d4bc85;
         }
         
+.zvaigzdute {background: #292725;
+            border-radius: 7px;
+            padding: 15px;
+  font-size:10px;
+  width: 1150px;
+margin-top:20px;
+margin-left: auto;
+    margin-right: auto;}
+.dark-mode .zvaigzdute {background: #f5f5f5;}
+.stat-per-year {
+    font-size: 0.7em;
+}
