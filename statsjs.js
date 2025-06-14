@@ -6,7 +6,7 @@ const relationshipTypes = [
     { id: 3, name: "Romantic Partners", color: "#934343" },
     { id: 4, name: "Frenemies", color: "#786fad" },
     { id: 5, name: "Friends with Benefits", color: "#c57090" },
-    { id: 6, name: "One Night Stands*", color: "white" },
+    { id: 6, name: "One Night Stands *", color: "white" },
     { id: 7, name: "Enemies", color: "#00858b" },
     { id: 8, name: "Colleagues", color: "#80938e" }
 ];
@@ -77,21 +77,39 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(processData)
         .then(relationships => {
             generateStatistics(relationships); // Regular stats first
-                 const disclaimerBox = document.createElement('div');
+            
+            // Create container for top lists
+            const topListsContainer = document.createElement('div');
+            topListsContainer.className = 'top-lists-container';
+            document.getElementById('stats-container').appendChild(topListsContainer);
+            
+            // Create sub-container for controversial stats
+            const controversialContainer = document.createElement('div');
+            controversialContainer.className = 'top-list-subcontainer';
+            topListsContainer.appendChild(controversialContainer);
+            generateControversialStats(relationships, controversialContainer);
+            
+            // Create sub-container for promiscuity stats
+            const promiscuityContainer = document.createElement('div');
+            promiscuityContainer.className = 'top-list-subcontainer';
+            topListsContainer.appendChild(promiscuityContainer);
+            generatePromiscuityStats(relationships, promiscuityContainer);
+            
+            // Add disclaimer box
+            const disclaimerBox = document.createElement('div');
             disclaimerBox.className = 'zvaigzdute';
             disclaimerBox.innerHTML = `
-                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
+                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.<br><br>** Personažai, turintys daugiausiai priešų ir frenemies.<br><br>*** Išdėstyti mažėjančia tvarka pagal skirtingų partnerių skaičių per <b>vienerius</b> metus.
             `;
             document.getElementById('stats-container').appendChild(disclaimerBox);
-      
-            // Create a container for special stats
-            const specialStatsContainer = document.createElement('div');
-            specialStatsContainer.className = 'special-stats-container';
-            document.getElementById('stats-container').appendChild(specialStatsContainer);
             
-            // Add controversial and promiscuous stats to the special container
-            generateControversialStats(relationships, specialStatsContainer);
-            generatePromiscuityStats(relationships, specialStatsContainer);
+            // Load and process country data
+            return fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/countries.txt');
+        })
+        .then(response => response.text())
+        .then(processCountryData)
+        .then(countryStats => {
+            generateCountryStats(countryStats);
         })
         .catch(error => console.error("Error loading data:", error));
 });
@@ -145,6 +163,23 @@ function processData(pointsText) {
     });
     
     return relationships;
+}
+
+function processCountryData(countryText) {
+    const lines = countryText.split('\n').filter(line => line.trim());
+    const countryStats = {};
+    
+    lines.forEach(line => {
+        const parts = line.split('\t');
+        if (parts.length >= 3) {
+            const country = parts[2].trim();
+            if (country) {
+                countryStats[country] = (countryStats[country] || 0) + 1;
+            }
+        }
+    });
+    
+    return countryStats;
 }
 
 function calculatePerYearStats(count, birthDate) {
@@ -316,13 +351,13 @@ function generateControversialStats(relationships, container) {
     header.className = 'stat-header';
     header.innerHTML = `
         
-        <span class="toptenname">Top 10 Most Controversial Characters</span>
+        <span class="toptenname">Top 10 Most Controversial Characters **</span>
     `;
     statBox.appendChild(header);
     
     const description = document.createElement('div');
     description.className = 'stat-description';
-    description.textContent = 'Characters with the most enemies and frenemies';
+    description.textContent = '';
     statBox.appendChild(description);
     
     const listContainer = document.createElement('div');
@@ -403,13 +438,13 @@ function generatePromiscuityStats(relationships, container) {
     header.className = 'stat-header';
     header.innerHTML = `
     
-        <span class="toptenname">Top 10 Sluttiest characters</span>
+        <span class="toptenname">Top 10 Sluttiest characters ***</span>
     `;
     statBox.appendChild(header);
     
     const description = document.createElement('div');
     description.className = 'stat-description';
-    description.textContent = 'Characters with the most friends with benefits and one night stands**';
+    description.textContent = ' ';
     statBox.appendChild(description);
     
     const listContainer = document.createElement('div');
@@ -438,5 +473,61 @@ function generatePromiscuityStats(relationships, container) {
     });
     
     statBox.appendChild(listContainer);
+    container.appendChild(statBox);
+}
+
+function generateCountryStats(countryStats) {
+    // Prepare data for display - sorted by count descending
+    const displayData = Object.entries(countryStats)
+        .map(([country, count]) => ({ country, count }))
+        .sort((a, b) => b.count - a.count);
+    
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box country-box';
+    statBox.style.width = '1150px';
+    statBox.style.marginTop = '20px';
+    
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `
+        <span class="toptenname">Character Distribution by Country</span>
+    `;
+    statBox.appendChild(header);
+    
+    const description = document.createElement('div');
+    description.className = 'stat-description';
+    description.textContent = '';
+    statBox.appendChild(description);
+    
+    const listContainer = document.createElement('div');
+    listContainer.className = 'stat-list';
+    
+    displayData.forEach((item, index) => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'stat-rank';
+        rankSpan.textContent = `${index + 1}.`;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'stat-name';
+        nameSpan.textContent = item.country;
+        
+        const countSpan = document.createElement('span');
+        countSpan.className = 'stat-count';
+        countSpan.textContent = item.count;
+        
+        statItem.appendChild(rankSpan);
+        statItem.appendChild(nameSpan);
+        statItem.appendChild(countSpan);
+        listContainer.appendChild(statItem);
+    });
+    
+    statBox.appendChild(listContainer);
+    
+    // Append after the disclaimer box
+    const container = document.getElementById('stats-container');
     container.appendChild(statBox);
 }
