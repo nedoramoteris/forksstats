@@ -31,6 +31,21 @@ const raceColors = {
 // Global variable to store character data
 let characterData = {};
 
+// Define extra one night stands in a single place
+const extraOneNightStands = {
+    'Katrina Deva Bianchi': 9,
+    'Hera Melody Harlow': 2,
+    'Lennon Therasia Windsor': 29,
+    'Valeria Euphemia Greco-Whitmore': 4,
+    'Carmen Iscariot Denali': 964,
+    'Jonathan Fort Harlow': 101,
+    'Nathaniel Dean Harlow': 60,
+    'Michael Romeo Harlow': 310,
+    'Venetia Irida Dragoumis': 3,
+    'Emery Herman Bernhard': 39,
+    'Randall Frank Dreschler': 495
+};
+
 // Dark mode toggle functionality
 document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.querySelector(".dark-mode-toggle");
@@ -65,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  const disclaimerBox = document.createElement('div');
             disclaimerBox.className = 'zvaigzdute';
             disclaimerBox.innerHTML = `
-                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų, ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
+                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
             `;
             document.getElementById('stats-container').appendChild(disclaimerBox);
       
@@ -209,21 +224,7 @@ function generateStatistics(relationships) {
         
         // Add extra one night stands
         if (relType.id === 6) {
-            const extraCounts = {
-                'Katrina Deva Bianchi': 9,
-                'Hera Melody Harlow': 2,
-                'Lennon Therasia Windsor': 29,
-                'Valeria Euphemia Greco-Whitmore': 4,
-                'Carmen Iscariot Denali': 964,
-                'Jonathan Fort Harlow': 101,
-                'Nathaniel Dean Harlow': 60,
-                'Michael Romeo Harlow': 309,
-                'Venetia Irida Dragoumis': 3,
-                'Emery Herman Bernhard': 39,
-                'Randall Frank Dreschler': 495
-            };
-            
-            for (const [name, count] of Object.entries(extraCounts)) {
+            for (const [name, count] of Object.entries(extraOneNightStands)) {
                 relCounts[name] = (relCounts[name] || 0) + count;
             }
         }
@@ -365,21 +366,7 @@ function generatePromiscuityStats(relationships, container) {
         }
     });
     
-    // Add the extra one night stands we defined earlier
-    const extraOneNightStands = {
-        'Katrina Deva Bianchi': 9,
-        'Hera Melody Harlow': 2,
-        'Lennon Therasia Windsor': 29,
-        'Valeria Euphemia Greco-Whitmore': 4,
-        'Carmen Iscariot Denali': 964,
-        'Jonathan Fort Harlow': 101,
-        'Nathaniel Dean Harlow': 60,
-        'Michael Romeo Harlow': 309,
-        'Venetia Irida Dragoumis': 3,
-        'Emery Herman Bernhard': 39,
-        'Randall Frank Dreschler': 495
-    };
-    
+    // Add the extra one night stands from our global constant
     for (const [name, count] of Object.entries(extraOneNightStands)) {
         promiscuityScores[name] = (promiscuityScores[name] || 0) + count;
     }
