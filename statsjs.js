@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  const disclaimerBox = document.createElement('div');
             disclaimerBox.className = 'zvaigzdute';
             disclaimerBox.innerHTML = `
-                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
+                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų, ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.
             `;
             document.getElementById('stats-container').appendChild(disclaimerBox);
       
