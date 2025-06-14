@@ -240,7 +240,8 @@
   width: 1150px;
 margin-top:10px;
 margin-left: auto;
-    margin-right: auto;}
+    margin-right: auto;
+text-align:justify;}
 .dark-mode .zvaigzdute {background: #f5f5f5;}
 .stat-per-year {
     font-size: 0.7em;
@@ -313,3 +314,37 @@ margin-left: auto;
 .stat-item:hover {
     transform: translateX(5px);
 }
+/* Add these new styles */
+/* Top Lists Layout */
+.top-lists-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-left: -30px;
+    max-width: 1150px; /* Same as your individual boxes */
+  gap: 50px;
+}
+
+.top-list-subcontainer {
+    width: 550px; /* Fixed width */
+    margin: 0 auto; /* This creates the gap between boxes */
+}
+
+.controversial-box, 
+.promiscuity-box {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .top-lists-container {
+        max-width: 100%;
+    }
+    .top-list-subcontainer {
+        width: 100%;
+        margin: 0 0 20px 0; /* Stack vertically with bottom margin on mobile */
+    }
+}
+
