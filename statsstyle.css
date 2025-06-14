@@ -1,248 +1,248 @@
+body, html {
+    background-color: #21211F;
+    font-family: 'Montserrat', sans-serif;
+    color: #6E6761;
+}
 
-        body, html {
-            background-color: #21211F;
-            font-family: 'Montserrat', sans-serif;
-            color: #6E6761;
-        }
+.dark-mode {
+    background: white;
+    color: #333;
+}
 
-        .dark-mode {
-            background: white;
-            color: #333;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 .toptenname {background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;}
-        h1 {
-            font-family: 'Lemon/Milk light', sans-serif;
-            letter-spacing: 1px;
-            background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;}
+h1 {
+    font-family: 'Lemon/Milk light', sans-serif;
+    letter-spacing: 1px;
+    background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    text-align: center;
+}
 
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
 
-        .stat-box {
-            background: #292725;
-            border-radius: 7px;
-            padding: 15px;
-            width: 350px;
-           
-        }
+.stat-box {
+    background: #292725;
+    border-radius: 7px;
+    padding: 15px;
+    width: 350px;
+   
+}
 
-        .dark-mode .stat-box {
-            background: #f5f5f5;
-        }
+.dark-mode .stat-box {
+    background: #f5f5f5;
+}
 
-        .stat-header {
-            font-family: 'Lemon/Milk light', sans-serif;
-            letter-spacing: 1px;
-            font-size: 14px;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #444;
-            display: flex;
-            align-items: center;
-        }
+.stat-header {
+    font-family: 'Lemon/Milk light', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    align-items: center;
+}
 
-        .dark-mode .stat-header {
-            color: #333;
-            border-bottom-color: #e0e0e0;
-        }
+.dark-mode .stat-header {
+    color: #333;
+    border-bottom-color: #e0e0e0;
+}
 
-        .stat-header-color {
-            width: 30px;
-            height: 4px;
-            margin-right: 10px;
-            border-radius: 2px;
-        }
+.stat-header-color {
+    width: 30px;
+    height: 4px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
 
-        .stat-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+.stat-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
 
-        .stat-list::-webkit-scrollbar {
-            width: 5px;
-        }
+.stat-list::-webkit-scrollbar {
+    width: 5px;
+}
 
-        .stat-list::-webkit-scrollbar-track {
-            background: #33312e;
-            border-radius: 3px;
-        }
+.stat-list::-webkit-scrollbar-track {
+    background: #33312e;
+    border-radius: 3px;
+}
 
-        .stat-list::-webkit-scrollbar-thumb {
-            background: #6E6761;
-            border-radius: 3px;
-        }
+.stat-list::-webkit-scrollbar-thumb {
+    background: #6E6761;
+    border-radius: 3px;
+}
 
-        .dark-mode .stat-list::-webkit-scrollbar-track {
-            background: #e0e0e0;
-        }
+.dark-mode .stat-list::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
 
-        .dark-mode .stat-list::-webkit-scrollbar-thumb {
-            background: #999;
-        }
+.dark-mode .stat-list::-webkit-scrollbar-thumb {
+    background: #999;
+}
 
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 12px;
-            padding: 5px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
 
-        .stat-item:hover {
-            background-color: #33312e;
-        }
+.stat-item:hover {
+    background-color: #33312e;
+}
 
-        .dark-mode .stat-item:hover {
-            background-color: #f0f0f0;
-        }
+.dark-mode .stat-item:hover {
+    background-color: #f0f0f0;
+}
 
-        .stat-name {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+.stat-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-        .stat-count {
-            font-weight: 600;
-            margin-left: 10px;
-        }
+.stat-count {
+    font-weight: 600;
+    margin-left: 10px;
+}
 
-        .dark-mode-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 5px;
-            border-radius: 7px;
-            cursor: pointer;
-            z-index: 999;
-            font-family: 'archivo', sans-serif;
-            font-size: 20px;
-            color: #6E6761;
-            background-color: rgba(82, 76, 70, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-        }
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 5px;
+    border-radius: 7px;
+    cursor: pointer;
+    z-index: 999;
+    font-family: 'archivo', sans-serif;
+    font-size: 20px;
+    color: #6E6761;
+    background-color: rgba(82, 76, 70, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+}
 
-        .dark-mode-toggle:hover {
-            color: #aba19e;
-        }
+.dark-mode-toggle:hover {
+    color: #aba19e;
+}
 
-        .back-button .svg-icon {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px;
-            border-radius: 7px;
-            cursor: pointer;
-            z-index: 999;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 19px;
-            color: #6E6761;
-            background-color: rgba(82, 76, 70, 0.3);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
+.back-button .svg-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    z-index: 999;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 19px;
+    color: #6E6761;
+    background-color: rgba(82, 76, 70, 0.3);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;
+}
 
-        .dark-mode .back-button {
-            background-color: #f5f5f5;
-        }
+.dark-mode .back-button {
+    background-color: #f5f5f5;
+}
 
-        .back-button:hover {
-            color: rgba(82, 76, 70, 0.5);
-        }
+.back-button:hover {
+    color: rgba(82, 76, 70, 0.5);
+}
 
-        .dark-mode .back-button:hover {
-            background-color: #e0e0e0;
-        }
-   /* Race color classes */
+.dark-mode .back-button:hover {
+    background-color: #e0e0e0;
+}
+/* Race color classes */
 
-        .race-hunter {
-            color: #94655D;
-        }
-        .race-werewolf {
-            color: #434F3F;
-        }
-        .race-hybrid {
-            color: #524047;
-        }
-        .race-witch {
-            color: #405752;
-        }
-        .race-human {
-            color: #4C4957;
-        }
-        .race-vampire {
-            color: #944444;
-        }
-        .race-volturi {
-            color: #664E64;
-        }
-        .race-hunterwitch {
-            background-image: linear-gradient(to right, #94655D, #405752, #405752);
-  -webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-        }
-        .race-vampirehunter {
-           background-image: linear-gradient(to right, #7B403B, #94655D,#94655D);
-  -webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-        }
-        .race-vampirewitch {
-           background-image: linear-gradient(to right, #405752, #803131, #803131);
-  -webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-        }
-        .race-supernaturalhuman {
-            background-image: linear-gradient(to right, #756059, #4C4957, #4C4957);
-  -webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-        }
-        .race-hybridhunter {
-          background-image: linear-gradient(to right, #94655D, #524047, #524047);
-  -webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-        }
-        .race-pet {
-            color: #d4bc85;
-        }
-        
+.race-hunter {
+    color: #94655D;
+}
+.race-werewolf {
+    color: #434F3F;
+}
+.race-hybrid {
+    color: #524047;
+}
+.race-witch {
+    color: #405752;
+}
+.race-human {
+    color: #4C4957;
+}
+.race-vampire {
+    color: #944444;
+}
+.race-volturi {
+    color: #664E64;
+}
+.race-hunterwitch {
+    background-image: linear-gradient(to right, #94655D, #405752, #405752);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-vampirehunter {
+    background-image: linear-gradient(to right, #7B403B, #94655D,#94655D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-vampirewitch {
+    background-image: linear-gradient(to right, #405752, #803131, #803131);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-supernaturalhuman {
+    background-image: linear-gradient(to right, #756059, #4C4957, #4C4957);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-hybridhunter {
+    background-image: linear-gradient(to right, #94655D, #524047, #524047);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-pet {
+    color: #d4bc85;
+}
+
 .zvaigzdute {
-            border-radius: 7px;
-            padding: 15px;
-  font-size:12px;
-  width: 1150px;
-margin-top:10px;
-margin-left: auto;
+    border-radius: 7px;
+    padding: 15px;
+    font-size:12px;
+    width: 1150px;
+    margin-top:-20px;
+    margin-left: auto;
     margin-right: auto;
-text-align:justify;}
-
+    text-align:justify;
+}
+.dark-mode .zvaigzdute {background: #f5f5f5;}
 .stat-per-year {
     font-size: 0.7em;
 }
@@ -251,7 +251,7 @@ text-align:justify;}
 .controversial-box, .promiscuity-box {
     margin: 20px auto;
     order: -1; /* Make them appear first */
-  overflow: auto;
+    overflow: auto;
 }
 
 .dark-mode .controversial-box, 
@@ -296,16 +296,6 @@ text-align:justify;}
     font-weight: bold;
 }
 
-
-
-
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .controversial-box, .promiscuity-box {
-        width: 100% !important;
-    }
-}
-
 /* Animation for hover effects */
 .stat-item {
     transition: all 0.3s ease;
@@ -314,7 +304,7 @@ text-align:justify;}
 .stat-item:hover {
     transform: translateX(5px);
 }
-/* Add these new styles */
+
 /* Top Lists Layout */
 .top-lists-container {
     display: flex;
@@ -322,13 +312,13 @@ text-align:justify;}
     justify-content: center;
     width: 100%;
     margin-left: -30px;
-    max-width: 1150px; /* Same as your individual boxes */
-  gap: 50px;
+    max-width: 1150px;
+    gap: 50px;
 }
 
 .top-list-subcontainer {
-    width: 550px; /* Fixed width */
-    margin: 0 auto; /* This creates the gap between boxes */
+    width: 550px;
+    margin: 0 auto;
 }
 
 .controversial-box, 
@@ -337,33 +327,56 @@ text-align:justify;}
     margin: 0 !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-    .top-lists-container {
-        max-width: 100%;
-    }
-    .top-list-subcontainer {
-        width: 100%;
-        margin: 0 0 20px 0; /* Stack vertically with bottom margin on mobile */
-    }
+/* Distribution Layout */
+.distribution-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1150px;
+    margin: 20px auto;
+    gap: 50px;
 }
 
-/* Add this to your CSS file */
+.distribution-subcontainer {
+    width: 550px;
+    margin: 0;
+}
+
+.race-box, .country-box {
+    width: 100% !important;
+  margin-left: -15px;
+}
+
+/* Gender box styling */
 .gender-box {
     height: 120px;
     overflow: hidden;
+    width: 1150px !important;
+    margin-top: 10px !important;
 }
 
 .gender-box .stat-list {
-    max-height: 80px; /* Adjust based on your needs */
+    max-height: 80px;
 }
 
-/* Add this to your CSS file */
-.country-box {
-    height: 205px;
-    overflow: hidden;
-}
-
-.country-box .stat-list {
-    max-height: 170px; /* Adjust based on your needs */
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .top-lists-container,
+    .distribution-container {
+        max-width: 100%;
+    }
+    
+    .top-list-subcontainer,
+    .distribution-subcontainer {
+        width: 100%;
+        
+    }
+    
+    .controversial-box, 
+    .promiscuity-box,
+    .race-box, 
+    .country-box {
+        width: 100% !important;
+    }
 }
