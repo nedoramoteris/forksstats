@@ -109,7 +109,14 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.text())
         .then(processCountryData)
         .then(countryStats => {
-            generateCountryStats(countryStats);
+            // Load and process gender data before generating stats
+            return fetch('https://raw.githubusercontent.com/nedoramoteris/forksfc/refs/heads/main/veidai.txt')
+                .then(response => response.text())
+                .then(processGenderData)
+                .then(genderStats => {
+                    generateGenderStats(genderStats);
+                    generateCountryStats(countryStats);
+                });
         })
         .catch(error => console.error("Error loading data:", error));
 });
@@ -180,6 +187,26 @@ function processCountryData(countryText) {
     });
     
     return countryStats;
+}
+
+function processGenderData(genderText) {
+    const lines = genderText.split('\n').filter(line => line.trim());
+    const genderStats = {
+        'male': 0,
+        'female': 0
+    };
+    
+    lines.forEach(line => {
+        const parts = line.split('\t');
+        if (parts.length >= 3) {
+            const gender = parts[2].trim().toLowerCase();
+            if (gender === 'male' || gender === 'female') {
+                genderStats[gender]++;
+            }
+        }
+    });
+    
+    return genderStats;
 }
 
 function calculatePerYearStats(count, birthDate) {
@@ -344,13 +371,9 @@ function generateControversialStats(relationships, container) {
     statBox.className = 'stat-box controversial-box';
     statBox.style.width = '1150px';
     
-    // Add section heading
-    
-    
     const header = document.createElement('div');
     header.className = 'stat-header';
     header.innerHTML = `
-        
         <span class="toptenname">Top 10 Most Controversial Characters **</span>
     `;
     statBox.appendChild(header);
@@ -437,7 +460,6 @@ function generatePromiscuityStats(relationships, container) {
     const header = document.createElement('div');
     header.className = 'stat-header';
     header.innerHTML = `
-    
         <span class="toptenname">Top 10 Sluttiest characters ***</span>
     `;
     statBox.appendChild(header);
@@ -530,4 +552,66 @@ function generateCountryStats(countryStats) {
     // Append after the disclaimer box
     const container = document.getElementById('stats-container');
     container.appendChild(statBox);
+}
+
+function generateGenderStats(genderStats) {
+    // Prepare data for display - sorted by count descending
+    const displayData = Object.entries(genderStats)
+        .map(([gender, count]) => ({ gender, count }))
+        .sort((a, b) => b.count - a.count);
+    
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box gender-box';
+    statBox.style.width = '1150px';
+    statBox.style.marginTop = '20px';
+    statBox.style.height = '100px';
+    
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `
+        <span class="toptenname">Character Distribution by Gender</span>
+    `;
+    statBox.appendChild(header);
+    
+    const description = document.createElement('div');
+    description.className = 'stat-description';
+    description.textContent = '';
+    statBox.appendChild(description);
+    
+    const listContainer = document.createElement('div');
+    listContainer.className = 'stat-list';
+    
+    displayData.forEach((item, index) => {
+        const statItem = document.createElement('div');
+        statItem.className = 'stat-item';
+        
+        const rankSpan = document.createElement('span');
+        rankSpan.className = 'stat-rank';
+        rankSpan.textContent = `${index + 1}.`;
+        
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'stat-name';
+        nameSpan.textContent = item.gender.charAt(0).toUpperCase() + item.gender.slice(1);
+        
+        const countSpan = document.createElement('span');
+        countSpan.className = 'stat-count';
+        countSpan.textContent = item.count;
+        
+        statItem.appendChild(rankSpan);
+        statItem.appendChild(nameSpan);
+        statItem.appendChild(countSpan);
+        listContainer.appendChild(statItem);
+    });
+    
+    statBox.appendChild(listContainer);
+    
+    // Append before the country box
+    const container = document.getElementById('stats-container');
+    const countryBox = document.querySelector('.country-box');
+    if (countryBox) {
+        container.insertBefore(statBox, countryBox);
+    } else {
+        container.appendChild(statBox);
+    }
 }
