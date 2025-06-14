@@ -1,28 +1,382 @@
-<!DOCTYPE html> 
-<html>
-<head>
-    <title>Forksoverse: Statistika</title>
-    <link rel="icon" href="https://i.servimg.com/u/f57/13/40/85/94/untitl13.png" type="image/x-icon">
-    <link rel="stylesheet" href="statsstyle.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/lemonmilk" rel="stylesheet">
-    <script src="statsjs.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>FORKSOVERSE STATISTIKA</h1>
-        
-        <div class="stats-container" id="stats-container">
-            <!-- Statistics will be populated here by JavaScript -->
-        </div>
-    </div>
+body, html {
+    background-color: #21211F;
+    font-family: 'Montserrat', sans-serif;
+    color: #6E6761;
+}
 
-    <a href="https://nedoramoteris.github.io/voratinklis/" class="back-button">
-        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1">
-            <path d="M590.08 810.666667a42.666667 42.666667 0 0 1-33.28-15.786667l-206.08-256a42.666667 42.666667 0 0 1 0-54.186667l213.333333-256a42.666667 42.666667 0 0 1 65.706667 54.613334L439.04 512l184.32 228.693333a42.666667 42.666667 0 0 1-33.28 69.973334z"/>
-        </svg>
-    </a>
+.dark-mode {
+    background: white;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.toptenname {background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;}
+h1 {
+    font-family: 'Lemon/Milk light', sans-serif;
+    letter-spacing: 1px;
+    background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.stats-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.stat-box {
+    background: #292725;
+    border-radius: 7px;
+    padding: 15px;
+    width: 350px;
+   
+}
+
+.dark-mode .stat-box {
+    background: #f5f5f5;
+}
+
+.stat-header {
+    font-family: 'Lemon/Milk light', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #444;
+    display: flex;
+    align-items: center;
+}
+
+.dark-mode .stat-header {
+    color: #333;
+    border-bottom-color: #e0e0e0;
+}
+
+.stat-header-color {
+    width: 30px;
+    height: 4px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.stat-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.stat-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.stat-list::-webkit-scrollbar-track {
+    background: #33312e;
+    border-radius: 3px;
+}
+
+.stat-list::-webkit-scrollbar-thumb {
+    background: #6E6761;
+    border-radius: 3px;
+}
+
+.dark-mode .stat-list::-webkit-scrollbar-track {
+    background: #e0e0e0;
+}
+
+.dark-mode .stat-list::-webkit-scrollbar-thumb {
+    background: #999;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.stat-item:hover {
+    background-color: #33312e;
+}
+
+.dark-mode .stat-item:hover {
+    background-color: #f0f0f0;
+}
+
+.stat-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stat-count {
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 5px;
+    border-radius: 7px;
+    cursor: pointer;
+    z-index: 999;
+    font-family: 'archivo', sans-serif;
+    font-size: 20px;
+    color: #6E6761;
+    background-color: rgba(82, 76, 70, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+}
+
+.dark-mode-toggle:hover {
+    color: #aba19e;
+}
+
+.back-button .svg-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    z-index: 999;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 19px;
+    color: #6E6761;
+    background-color: rgba(82, 76, 70, 0.3);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.dark-mode .back-button {
+    background-color: #f5f5f5;
+}
+
+.back-button:hover {
+    color: rgba(82, 76, 70, 0.5);
+}
+
+.dark-mode .back-button:hover {
+    background-color: #e0e0e0;
+}
+/* Race color classes */
+
+.race-hunter {
+    color: #94655D;
+}
+.race-werewolf {
+    color: #434F3F;
+}
+.race-hybrid {
+    color: #524047;
+}
+.race-witch {
+    color: #405752;
+}
+.race-human {
+    color: #4C4957;
+}
+.race-vampire {
+    color: #944444;
+}
+.race-volturi {
+    color: #664E64;
+}
+.race-hunterwitch {
+    background-image: linear-gradient(to right, #94655D, #405752, #405752);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-vampirehunter {
+    background-image: linear-gradient(to right, #7B403B, #94655D,#94655D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-vampirewitch {
+    background-image: linear-gradient(to right, #405752, #803131, #803131);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-supernaturalhuman {
+    background-image: linear-gradient(to right, #756059, #4C4957, #4C4957);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-hybridhunter {
+    background-image: linear-gradient(to right, #94655D, #524047, #524047);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.race-pet {
+    color: #d4bc85;
+}
+
+.zvaigzdute {
+    border-radius: 7px;
+    padding: 15px;
+    font-size:12px;
+    width: 1150px;
+    margin-top:-20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:justify;
+}
+.dark-mode .zvaigzdute {background: #f5f5f5;}
+.stat-per-year {
+    font-size: 0.7em;
+}
+
+/* Top 10 Lists Styling */
+.controversial-box, .promiscuity-box {
+    margin: 20px auto;
+    order: -1; /* Make them appear first */
+    overflow: auto;
+}
+
+.dark-mode .controversial-box, 
+.dark-mode .promiscuity-box {
+    border-color: #e0e0e0;
     
-    <div class="dark-mode-toggle">☀︎</div>
-</body>
-</html>
+}
+
+.stat-header {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 2px solid;
+}
+
+.controversial-box .stat-header {
+    border-bottom-color: #6E6761;
+}
+
+.promiscuity-box .stat-header {
+    border-bottom-color: #6E6761;
+}
+
+.stat-description {
+    font-size: 12px;
+    margin-bottom: 15px;
+   
+}
+
+.dark-mode .stat-description {
+    color: #666;
+}
+
+.stat-rank {
+    display: inline-block;
+    width: 25px;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Animation for hover effects */
+.stat-item {
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateX(5px);
+}
+
+/* Top Lists Layout */
+.top-lists-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-left: -30px;
+    max-width: 1150px;
+    gap: 50px;
+}
+
+.top-list-subcontainer {
+    width: 550px;
+    margin: 0 auto;
+}
+
+.controversial-box, 
+.promiscuity-box {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* Distribution Layout */
+.distribution-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1150px;
+    margin: 20px auto;
+    gap: 50px;
+}
+
+.distribution-subcontainer {
+    width: 550px;
+    margin: 0;
+}
+
+.race-box, .country-box {
+    width: 100% !important;
+  margin-left: -15px;
+}
+
+/* Gender box styling */
+.gender-box {
+    height: 120px;
+    overflow: hidden;
+    width: 1150px !important;
+    margin-top: 10px !important;
+}
+
+.gender-box .stat-list {
+    max-height: 80px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .top-lists-container,
+    .distribution-container {
+        max-width: 100%;
+    }
+    
+    .top-list-subcontainer,
+    .distribution-subcontainer {
+        width: 100%;
+        
+    }
+    
+    .controversial-box, 
+    .promiscuity-box,
+    .race-box, 
+    .country-box {
+        width: 100% !important;
+    }
+}
