@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const disclaimerBox = document.createElement('div');
             disclaimerBox.className = 'zvaigzdute';
             disclaimerBox.innerHTML = `
-                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų (pasaulio vidurkis), ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.<br><br>** Personažai, turintys daugiausiai priešų ir frenemies.<br><br>*** Išdėstyti mažėjančia tvarka pagal skirtingų partnerių skaičių per <b>vienerius</b> metus.
+                * Skirtingų partnerių skaičius per metus skaičiuojamas <i>assuminant</i>, kad personažas pradėjo užsiimti vientkartiniais nuotykiais būdamas 16-os metų, ir neatsižvelgiant į laikotarpius, kai personažas turėjo ilgalaikių partnerių. Dėl šitų priežasčių skaičiavimas nėra visiškai tikslus.<br><br>** Personažai, turintys daugiausiai priešų ir frenemies.<br><br>*** Išdėstyti mažėjančia tvarka pagal skirtingų partnerių skaičių per <b>vienerius</b> metus.
             `;
             document.getElementById('stats-container').appendChild(disclaimerBox);
             
