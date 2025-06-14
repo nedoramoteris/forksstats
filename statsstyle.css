@@ -348,3 +348,22 @@ text-align:justify;}
     }
 }
 
+/* Add this to your CSS file */
+.gender-box {
+    height: 120px;
+    overflow: hidden;
+}
+
+.gender-box .stat-list {
+    max-height: 80px; /* Adjust based on your needs */
+}
+
+/* Add this to your CSS file */
+.country-box {
+    height: 205px;
+    overflow: hidden;
+}
+
+.country-box .stat-list {
+    max-height: 170px; /* Adjust based on your needs */
+}
