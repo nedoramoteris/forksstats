@@ -137,8 +137,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Generate gender stats at the bottom
                     generateGenderStats(genderStats);
                     
-                    // Generate couples by race stats
-                    generateCouplesByRaceStats();
+                    // Generate couples statistics in the new layout
+                    generateCouplesStatistics();
                 });
         })
         .catch(error => console.error("Error loading data:", error));
@@ -873,7 +873,33 @@ function createGenderBar(gender, count, total) {
     return barContainer;
 }
 
-function generateCouplesByRaceStats() {
+function generateCouplesStatistics() {
+    // Create the couples container
+    const couplesContainer = document.createElement('div');
+    couplesContainer.className = 'couples-container';
+    document.getElementById('stats-container').appendChild(couplesContainer);
+
+    // Create left column for species couples
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'couples-left-column';
+    couplesContainer.appendChild(leftColumn);
+
+    // Create right column for gender couples and total count
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'couples-right-column';
+    couplesContainer.appendChild(rightColumn);
+
+    // Generate couples by species in the left column
+    generateCouplesByRaceStats(leftColumn);
+
+    // Generate couples by gender in the top of right column
+    generateCouplesByGenderStats(rightColumn);
+
+    // Generate total couples count in the bottom of right column
+    generateTotalCouplesCount(rightColumn);
+}
+
+function generateCouplesByRaceStats(container) {
     fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
         .then(response => response.text())
         .then(text => {
@@ -893,7 +919,7 @@ function generateCouplesByRaceStats() {
                     const target = parts[1].trim();
                     const type = parseInt(parts[3]);
                     
-                    if (type === 3) {
+                    if (type === 3) { // Romantic partners
                         const pairKey = [source, target].sort().join('|');
                         
                         if (!processedPairs.has(pairKey)) {
@@ -948,7 +974,7 @@ function generateCouplesByRaceStats() {
 
                 const plusElement = document.createElement('span');
                 plusElement.className = 'couples-plus';
-                plusElement.textContent = ' ❤ ';
+                plusElement.textContent = ' & ';
 
                 const race2Element = document.createElement('span');
                 race2Element.className = `stat-name ${raceColors[item.race2] || 'race-other'}`;
@@ -985,7 +1011,167 @@ function generateCouplesByRaceStats() {
             });
 
             statBox.appendChild(listContainer);
-            document.getElementById('stats-container').appendChild(statBox);
+            container.appendChild(statBox);
         })
         .catch(error => console.error("Error loading relationship data:", error));
+}
+
+function generateCouplesByGenderStats(container) {
+    fetch('https://raw.githubusercontent.com/nedoramoteris/forksfc/refs/heads/main/veidai.txt')
+        .then(response => response.text())
+        .then(genderText => {
+            // First build a mapping of character names to their genders
+            const genderMap = {};
+            const genderLines = genderText.split('\n').filter(line => line.trim());
+            
+            genderLines.forEach(line => {
+                const parts = line.split('\t');
+                if (parts.length >= 3) {
+                    const name = parts[1].trim();
+                    const gender = parts[2].trim().toLowerCase();
+                    if (gender === 'male' || gender === 'female') {
+                        genderMap[name] = gender;
+                    }
+                }
+            });
+
+            // Now fetch the relationships data again to count couples by gender
+            return fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
+                .then(response => response.text())
+                .then(text => {
+                    const lines = text.split('\n').filter(line => line.trim());
+                    const genderPairs = {
+                        'male+male': 0,
+                        'male+female': 0,
+                        'female+female': 0
+                    };
+                    const processedPairs = new Set();
+
+                    lines.forEach(line => {
+                        if (line.startsWith('-') || line.startsWith('Natanielis Jaunesnysis') || 
+                            line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
+                            return;
+                        }
+                        
+                        const parts = line.split('\t');
+                        if (parts.length >= 4) {
+                            const source = parts[0].trim();
+                            const target = parts[1].trim();
+                            const type = parseInt(parts[3]);
+                            
+                            if (type === 3) { // Romantic partners
+                                const pairKey = [source, target].sort().join('|');
+                                
+                                if (!processedPairs.has(pairKey)) {
+                                    processedPairs.add(pairKey);
+                                    const gender1 = genderMap[source] || 'unknown';
+                                    const gender2 = genderMap[target] || 'unknown';
+                                    
+                                    // Only count if both genders are known
+                                    if (gender1 !== 'unknown' && gender2 !== 'unknown') {
+                                        const genderPairKey = [gender1, gender2].sort().join('+');
+                                        if (genderPairKey === 'male+male') {
+                                            genderPairs['male+male']++;
+                                        } else if (genderPairKey === 'female+female') {
+                                            genderPairs['female+female']++;
+                                        } else {
+                                            genderPairs['male+female']++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Prepare data for display
+                    const displayData = [
+                        { label: 'Male + Female', count: genderPairs['male+female'], key: 'male+female' },
+                        { label: 'Female + Female', count: genderPairs['female+female'], key: 'female+female' },
+                        { label: 'Male + Male', count: genderPairs['male+male'], key: 'male+male' }
+                    ].sort((a, b) => b.count - a.count);
+
+                    // Create the stats box
+                    const statBox = document.createElement('div');
+                    statBox.className = 'stat-box couples-gender-box';
+
+                    const header = document.createElement('div');
+                    header.className = 'stat-header';
+                    header.innerHTML = `<span class="toptenname">Romantic Couples by Gender</span>`;
+                    statBox.appendChild(header);
+
+                    const listContainer = document.createElement('div');
+                    listContainer.className = 'stat-list couples-gender-list';
+
+                    displayData.forEach((item, index) => {
+                        const coupleItem = document.createElement('div');
+                        coupleItem.className = 'couples-gender-item';
+
+                        // Left side - label
+                        const labelSpan = document.createElement('span');
+                        labelSpan.className = 'couples-gender-label';
+                        labelSpan.textContent = item.label;
+
+                        // Right side - bar and count
+                        const visualContainer = document.createElement('div');
+                        visualContainer.className = 'couples-gender-visual';
+
+                        const barContainer = document.createElement('div');
+                        barContainer.className = 'couples-gender-bar-container';
+
+                        const bar = document.createElement('div');
+                        bar.className = 'couples-gender-bar';
+                        bar.style.width = `${Math.min(100, (item.count / Math.max(1, displayData[0].count)) * 100)}%`;
+                        
+                        // Different colors for different pairings
+                        if (item.key === 'male+male') {
+                            bar.style.background = '#4c4957'; // Darker color for M+M
+                        } else if (item.key === 'female+female') {
+                            bar.style.background = '#b58d84'; // Pinkish color for F+F
+                        } else {
+                            bar.style.background = 'linear-gradient(to right, #4c4957, #b58d84)'; // Gradient for M+F
+                        }
+
+                        barContainer.appendChild(bar);
+
+                        const countLabel = document.createElement('span');
+                        countLabel.className = 'couples-gender-count';
+                        countLabel.textContent = item.count;
+
+                        visualContainer.appendChild(barContainer);
+                        visualContainer.appendChild(countLabel);
+
+                        coupleItem.appendChild(labelSpan);
+                        coupleItem.appendChild(visualContainer);
+                        listContainer.appendChild(coupleItem);
+                    });
+
+                    statBox.appendChild(listContainer);
+                    container.appendChild(statBox);
+
+                    // Return the total count of all couples
+                    return genderPairs['male+male'] + genderPairs['male+female'] + genderPairs['female+female'];
+                });
+        })
+        .then(totalCouples => {
+            // Generate the total couples count box
+            const totalBox = document.createElement('div');
+            totalBox.className = 'stat-box total-couples-box';
+
+            const header = document.createElement('div');
+            header.className = 'stat-header';
+            header.innerHTML = `<span class="toptenname">Total Romantic Couples</span>`;
+            totalBox.appendChild(header);
+
+            const countDisplay = document.createElement('div');
+            countDisplay.className = 'total-couples-count';
+            countDisplay.textContent = totalCouples;
+            totalBox.appendChild(countDisplay);
+
+            container.appendChild(totalBox);
+        })
+        .catch(error => console.error("Error loading relationship data:", error));
+}
+
+function generateTotalCouplesCount(container) {
+    // This is now handled within generateCouplesByGenderStats
 }
