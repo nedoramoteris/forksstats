@@ -494,7 +494,7 @@ margin-left:5px;
 .couples-info {
     display: flex;
     align-items: left;
-    min-width: 250px;
+    min-width: 310px;
 }
 
 .couples-rank {
@@ -654,3 +654,16 @@ margin-left:5px;
 .dark-mode .couples-gender-bar-container {
     background: rgba(224, 224, 224, 0.1);
 }
+
+.disclaimeris {color:#9e3b3b;
+    border-radius: 7px;
+    padding: 15px;
+    font-size:12px;
+    width: 1150px;
+    margin-top:-20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:justify;}
+
+.stat-box.couples-box {height:325px;}
+.stat-list.couples-list {height:270px;}
