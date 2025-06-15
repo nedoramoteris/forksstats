@@ -690,3 +690,28 @@ margin-left:5px;
     -webkit-text-fill-color: transparent;
 font-weight:bold;
 font-size:13px;}
+.dark-mode .couples-tooltip {background:white !important;}
+.couples-tooltip {
+    position: absolute;
+  font-family:'montserrat', sans-serif;
+    background-color: #21211F !important;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    max-width: 1200px !important;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    pointer-events: none;
+    font-size: 12px;
+color:#6E6761 !important;
+}
+
+.couples-tooltip-list div {
+    margin-bottom: 3px;
+    padding: 2px;
+}
+
+.couples-tooltip-list div:last-child {
+    border-bottom: none;
+}
