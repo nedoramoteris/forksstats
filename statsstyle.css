@@ -443,6 +443,103 @@ h1 {
 
 .species-gender-box {margin-top:-50px !important;}
 
+
+
 .gender-bar {
 margin-left:5px;
 }
+
+/* Couples by Race Stats */
+.couples-box {
+    margin-top: 30px !important;
+    margin-bottom: 30px;
+    width: 1150px !important;
+}
+
+.couples-list {
+    max-height: none !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.couples-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(110, 103, 97, 0.2);
+}
+
+.couples-info {
+    display: flex;
+    align-items: center;
+    min-width: 300px;
+}
+
+.couples-rank {
+    margin-right: 15px;
+    width: 30px;
+    text-align: right;
+    font-weight: 600;
+    color: #6E6761;
+}
+
+.couples-pair {
+    display: flex;
+    align-items: center;
+}
+
+.couples-plus {
+    margin: 0 5px;
+    color: #6E6761;
+}
+
+.couples-visual {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 600px;
+}
+
+.couples-bar-container {
+    flex-grow: 1;
+    margin: 0 15px;
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(110, 103, 97, 0.1);
+    overflow: hidden;
+}
+
+.couples-bar {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    transition: width 0.5s ease;
+}
+
+.couples-count {
+    min-width: 40px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6E6761;
+}
+
+/* Dark mode adjustments */
+.dark-mode .couples-item {
+    border-bottom-color: rgba(224, 224, 224, 0.2);
+}
+
+.dark-mode .couples-rank,
+.dark-mode .couples-plus,
+.dark-mode .couples-count {
+    color: #666;
+}
+
+.dark-mode .couples-bar-container {
+    background: rgba(224, 224, 224, 0.1);
+}
+
