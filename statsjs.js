@@ -862,7 +862,6 @@ function createGenderBar(gender, count, total) {
     countLabel.textContent = `${count} (${percentage}%)`;
     countLabel.style.marginLeft = '5px';
     countLabel.style.fontSize = '11px';
-    countLabel.style.color = '#aaa';
 
     barContainer.appendChild(genderLabel);
     barContainer.appendChild(bar);
