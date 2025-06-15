@@ -995,6 +995,7 @@ function generateCouplesByRaceStats(container) {
                 const bar = document.createElement('div');
                 bar.className = 'couples-bar';
                 bar.style.width = `${Math.min(100, (item.count / displayData[0].count) * 100)}%`;
+              
 
                 barContainer.appendChild(bar);
 
