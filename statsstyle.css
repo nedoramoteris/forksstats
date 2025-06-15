@@ -383,7 +383,7 @@ h1 {
 
 /* Species by Gender Distribution */
 .species-gender-box {
-    margin-top: 30px !important;
+    margin-top: 60px !important;
     margin-bottom: 30px;
 }
 
@@ -441,7 +441,7 @@ h1 {
     }
 }
 
-.species-gender-box {margin-top:-50px !important;}
+.species-gender-box {margin-top:-10px !important;}
 
 .gender-bar {
 margin-left:5px;
@@ -683,3 +683,10 @@ margin-left:5px;
 .dark-mode .character-count {
     color: #666;
 }
+
+.skaiciukai {color: white;
+  background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+font-weight:bold;
+font-size:13px;}
