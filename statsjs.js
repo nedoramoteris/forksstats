@@ -69,8 +69,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // First load character data, then load and process relationship data
-    fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/avatarai.txt')
+     fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/avatarai.txt')
         .then(response => response.text())
+        .then(text => {
+            const characterCount = processRaceData(text);
+            // Display the character count
+            const countElement = document.createElement('div');
+            countElement.className = 'character-count';
+            countElement.textContent = `“In the state of Washington, under a near constant cover of clouds and rain, there's a small town named Forks. Population, ${characterCount} people. This is where I'm moving.”`;
+            document.querySelector('.container').insertBefore(countElement, document.querySelector('.stats-container'));
+            
+            return text;
+        })
         .then(processRaceData)
         .then(() => fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt'))
         .then(response => response.text())
@@ -160,6 +170,9 @@ function processRaceData(raceText) {
             };
         }
     });
+    
+    // Return the count of characters
+    return lines.length;
 }
 
 function processData(pointsText) {
