@@ -112,8 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Load and process gender data before generating stats
             return fetch('https://raw.githubusercontent.com/nedoramoteris/forksfc/refs/heads/main/veidai.txt')
                 .then(response => response.text())
-                .then(processGenderData)
-                .then(genderStats => {
+                .then(text => {
+                    const genderStats = processGenderData(text);
                     // Create container for distribution lists
                     const distributionContainer = document.createElement('div');
                     distributionContainer.className = 'distribution-container';
@@ -130,6 +130,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     countryContainer.className = 'distribution-subcontainer';
                     distributionContainer.appendChild(countryContainer);
                     generateCountryStats(countryStats, countryContainer);
+                    
+                    // Generate species by gender chart
+                    generateSpeciesGenderStats(text.split('\n').filter(line => line.trim()));
                     
                     // Generate gender stats at the bottom
                     generateGenderStats(genderStats);
@@ -628,14 +631,15 @@ function generateCountryStats(countryStats, container) {
         statItem.appendChild(countSpan);
         listContainer.appendChild(statItem);
     });
-// Add disclaimer box
-            const disclaimerBox = document.createElement('div');
-            disclaimerBox.className = 'zvaigzdute';
-            disclaimerBox.innerHTML = `
-                * Pasiskirstymas pagal šalis nebūtinai nurodo pasiskirstymą pagal tautybes. Čia – personažų <i>gimimo</i> šalys.
-            `;
-            document.getElementById('stats-container').appendChild(disclaimerBox);
-                
+
+    // Add disclaimer box
+    const disclaimerBox = document.createElement('div');
+    disclaimerBox.className = 'zvaigzdute';
+    disclaimerBox.innerHTML = `
+        * Pasiskirstymas pagal šalis nebūtinai nurodo pasiskirstymą pagal tautybes. Čia – personažų <i>gimimo</i> šalys.
+    `;
+    document.getElementById('stats-container').appendChild(disclaimerBox);
+        
     statBox.appendChild(listContainer);
     container.appendChild(statBox);
 }
@@ -655,7 +659,7 @@ function generateGenderStats(genderStats) {
     const header = document.createElement('div');
     header.className = 'stat-header';
     header.innerHTML = `
-        <span class="toptenname">Distribution by gender</span>
+        <span class="toptenname">Overall distribution by gender</span>
     `;
     statBox.appendChild(header);
     
@@ -680,7 +684,6 @@ function generateGenderStats(genderStats) {
         nameSpan.className = 'stat-name';
         nameSpan.textContent = item.gender.charAt(0).toUpperCase() + item.gender.slice(1);
   
-      
         const countSpan = document.createElement('span');
         countSpan.className = 'stat-count';
         countSpan.textContent = item.count;
@@ -698,3 +701,172 @@ function generateGenderStats(genderStats) {
     container.appendChild(statBox);
 }
 
+function generateSpeciesGenderStats(genderLines) {
+    // First build a mapping of character names to their genders
+    const genderMap = {};
+    genderLines.forEach(line => {
+        const parts = line.split('\t');
+        if (parts.length >= 3) {
+            const name = parts[1].trim();
+            const gender = parts[2].trim().toLowerCase();
+            if (gender === 'male' || gender === 'female') {
+                genderMap[name] = gender;
+            }
+        }
+    });
+
+    // Now build the stats object
+    const stats = {};
+    
+    // Initialize all possible race-gender combinations
+    Object.keys(raceColors).forEach(race => {
+        stats[`${race}-male`] = 0;
+        stats[`${race}-female`] = 0;
+    });
+    stats['other-male'] = 0;
+    stats['other-female'] = 0;
+
+    // Count each character
+    Object.entries(characterData).forEach(([name, data]) => {
+        const race = data.race || 'other';
+        const gender = genderMap[name] || 'unknown';
+        
+        if (gender === 'male' || gender === 'female') {
+            const key = `${race}-${gender}`;
+            stats[key] = (stats[key] || 0) + 1;
+        }
+    });
+
+    // Prepare data for display - group by race, then show male/female counts
+    const displayData = {};
+    Object.entries(stats).forEach(([key, count]) => {
+        if (count > 0) {
+            const [race, gender] = key.split('-');
+            if (!displayData[race]) {
+                displayData[race] = { male: 0, female: 0 };
+            }
+            displayData[race][gender] = count;
+        }
+    });
+
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box species-gender-box';
+    statBox.style.width = '1150px';
+    statBox.style.marginTop = '20px';
+
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `
+        <span class="toptenname">Species by Gender Distribution</span>
+    `;
+    statBox.appendChild(header);
+
+    const description = document.createElement('div');
+    description.className = 'stat-description';
+    description.textContent = '';
+    statBox.appendChild(description);
+
+    const listContainer = document.createElement('div');
+    listContainer.className = 'stat-list species-gender-list';
+    listContainer.style.maxHeight = 'none';
+    listContainer.style.display = 'flex';
+    listContainer.style.flexWrap = 'wrap';
+    listContainer.style.gap = '20px';
+
+    // Sort races by total count (descending)
+    const sortedRaces = Object.entries(displayData)
+        .map(([race, counts]) => ({
+            race,
+            total: counts.male + counts.female,
+            ...counts
+        }))
+        .sort((a, b) => b.total - a.total);
+
+    sortedRaces.forEach(item => {
+        const raceItem = document.createElement('div');
+        raceItem.className = 'species-gender-item';
+        raceItem.style.width = '330px';
+        raceItem.style.marginBottom = '10px';
+
+        const raceHeader = document.createElement('div');
+        raceHeader.className = 'species-gender-header';
+        raceHeader.style.display = 'flex';
+        raceHeader.style.alignItems = 'center';
+        raceHeader.style.marginBottom = '5px';
+
+        const raceColor = document.createElement('div');
+        raceColor.className = 'species-gender-color';
+        raceColor.style.width = '15px';
+        raceColor.style.height = '15px';
+        raceColor.style.marginRight = '10px';
+        raceColor.style.borderRadius = '3px';
+        
+        // Get the color for this race (using the first color if gradient)
+        const raceClass = raceColors[item.race.toLowerCase()] || 'race-other';
+        const raceElement = document.createElement('span');
+        raceElement.className = `stat-name ${raceClass}`;
+        raceElement.textContent = item.race.charAt(0).toUpperCase() + item.race.slice(1);
+        
+        raceHeader.appendChild(raceColor);
+        raceHeader.appendChild(raceElement);
+
+        const maleBar = createGenderBar('male', item.male, item.total);
+        const femaleBar = createGenderBar('female', item.female, item.total);
+
+        raceItem.appendChild(raceHeader);
+        raceItem.appendChild(maleBar);
+        raceItem.appendChild(femaleBar);
+        listContainer.appendChild(raceItem);
+
+        // Set the color after the element is in DOM so we can compute the gradient
+        setTimeout(() => {
+            const computedColor = window.getComputedStyle(raceElement).color;
+            raceColor.style.background = computedColor;
+        }, 0);
+    });
+
+    statBox.appendChild(listContainer);
+
+    // Append to the container
+    const container = document.getElementById('stats-container');
+    container.appendChild(statBox);
+}
+
+function createGenderBar(gender, count, total) {
+    const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+    
+    const barContainer = document.createElement('div');
+    barContainer.className = 'gender-bar-container';
+    barContainer.style.display = 'flex';
+    barContainer.style.alignItems = 'center';
+    barContainer.style.marginBottom = '3px';
+
+    const genderLabel = document.createElement('span');
+    genderLabel.className = 'gender-label';
+    genderLabel.textContent = gender.charAt(0).toUpperCase() + gender.slice(1) + ':';
+    genderLabel.style.width = '60px';
+    genderLabel.style.fontSize = '12px';
+
+    const bar = document.createElement('div');
+    bar.className = 'gender-bar';
+    bar.style.height = '15px';
+    bar.style.borderRadius = '3px';
+    bar.style.width = `${percentage}%`;
+    bar.style.background = gender === 'male' ? '#4c4957' : '#b58d84';
+    bar.style.position = 'relative';
+    bar.style.transition = 'width 0.5s ease';
+
+    const countLabel = document.createElement('span');
+    countLabel.className = 'gender-count';
+    countLabel.textContent = `${count} (${percentage}%)`;
+    countLabel.style.marginLeft = '5px';
+    countLabel.style.fontSize = '11px';
+    countLabel.style.color = '#aaa';
+
+    barContainer.appendChild(genderLabel);
+    barContainer.appendChild(bar);
+    barContainer.appendChild(countLabel);
+
+    return barContainer;
+}
