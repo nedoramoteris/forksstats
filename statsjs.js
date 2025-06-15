@@ -136,6 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     // Generate gender stats at the bottom
                     generateGenderStats(genderStats);
+                    
+                    // Generate couples by race stats
+                    generateCouplesByRaceStats();
                 });
         })
         .catch(error => console.error("Error loading data:", error));
@@ -868,4 +871,121 @@ function createGenderBar(gender, count, total) {
     barContainer.appendChild(countLabel);
 
     return barContainer;
+}
+
+function generateCouplesByRaceStats() {
+    fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
+        .then(response => response.text())
+        .then(text => {
+            const lines = text.split('\n').filter(line => line.trim());
+            const racePairs = {};
+            const processedPairs = new Set();
+
+            lines.forEach(line => {
+                if (line.startsWith('-') || line.startsWith('Natanielis Jaunesnysis') || 
+                    line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
+                    return;
+                }
+                
+                const parts = line.split('\t');
+                if (parts.length >= 4) {
+                    const source = parts[0].trim();
+                    const target = parts[1].trim();
+                    const type = parseInt(parts[3]);
+                    
+                    if (type === 3) {
+                        const pairKey = [source, target].sort().join('|');
+                        
+                        if (!processedPairs.has(pairKey)) {
+                            processedPairs.add(pairKey);
+                            const race1 = characterData[source]?.race || 'other';
+                            const race2 = characterData[target]?.race || 'other';
+                            const racePairKey = [race1, race2].sort().join('+');
+                            racePairs[racePairKey] = (racePairs[racePairKey] || 0) + 1;
+                        }
+                    }
+                }
+            });
+
+            const displayData = Object.entries(racePairs)
+                .map(([pair, count]) => {
+                    const [race1, race2] = pair.split('+');
+                    return {
+                        pair: `${race1.charAt(0).toUpperCase() + race1.slice(1)} + ${race2.charAt(0).toUpperCase() + race2.slice(1)}`,
+                        count,
+                        race1,
+                        race2
+                    };
+                })
+                .sort((a, b) => b.count - a.count);
+
+            const statBox = document.createElement('div');
+            statBox.className = 'stat-box couples-box';
+
+            const header = document.createElement('div');
+            header.className = 'stat-header';
+            header.innerHTML = `<span class="toptenname">Romantic Couples by Species</span>`;
+            statBox.appendChild(header);
+
+            const listContainer = document.createElement('div');
+            listContainer.className = 'stat-list couples-list';
+
+            displayData.forEach((item, index) => {
+                const coupleItem = document.createElement('div');
+                coupleItem.className = 'couples-item';
+
+                // Left side - rank and race pair
+                const coupleInfo = document.createElement('div');
+                coupleInfo.className = 'couples-info';
+
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'couples-rank';
+                rankSpan.textContent = `${index + 1}.`;
+
+                const race1Element = document.createElement('span');
+                race1Element.className = `stat-name ${raceColors[item.race1] || 'race-other'}`;
+                race1Element.textContent = item.race1.charAt(0).toUpperCase() + item.race1.slice(1);
+
+                const plusElement = document.createElement('span');
+                plusElement.className = 'couples-plus';
+                plusElement.textContent = ' ❤ ';
+
+                const race2Element = document.createElement('span');
+                race2Element.className = `stat-name ${raceColors[item.race2] || 'race-other'}`;
+                race2Element.textContent = item.race2.charAt(0).toUpperCase() + item.race2.slice(1);
+
+                coupleInfo.appendChild(rankSpan);
+                coupleInfo.appendChild(race1Element);
+                coupleInfo.appendChild(plusElement);
+                coupleInfo.appendChild(race2Element);
+
+                // Right side - bar and count
+                const visualContainer = document.createElement('div');
+                visualContainer.className = 'couples-visual';
+
+                const barContainer = document.createElement('div');
+                barContainer.className = 'couples-bar-container';
+
+                const bar = document.createElement('div');
+                bar.className = 'couples-bar';
+                bar.style.width = `${Math.min(100, (item.count / displayData[0].count) * 100)}%`;
+
+                barContainer.appendChild(bar);
+
+                const countLabel = document.createElement('span');
+                countLabel.className = 'couples-count';
+                countLabel.textContent = item.count;
+
+                visualContainer.appendChild(barContainer);
+                visualContainer.appendChild(countLabel);
+
+                coupleItem.appendChild(coupleInfo);
+                coupleItem.appendChild(visualContainer);
+                listContainer.appendChild(coupleItem);
+            });
+
+            statBox.appendChild(listContainer);
+            document.getElementById('stats-container').appendChild(statBox);
+        })
+        .catch(error => console.error("Error loading relationship data:", error));
 }
