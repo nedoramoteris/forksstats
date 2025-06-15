@@ -1190,3 +1190,379 @@ function generateCouplesByGenderStats(container) {
 function generateTotalCouplesCount(container) {
     // This is now handled within generateCouplesByGenderStats
 }
+// Add this function to create a tooltip for the couples bars
+function createCouplesTooltip(pairs, title) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'couples-tooltip';
+    tooltip.style.position = 'absolute';
+    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    tooltip.style.color = 'white';
+    tooltip.style.padding = '10px';
+    tooltip.style.borderRadius = '5px';
+    tooltip.style.zIndex = '1000';
+    tooltip.style.maxWidth = '300px';
+    tooltip.style.maxHeight = '400px';
+    tooltip.style.overflowY = 'auto';
+    tooltip.style.display = 'none';
+    
+    const tooltipTitle = document.createElement('div');
+    tooltipTitle.style.fontWeight = 'bold';
+    tooltipTitle.style.marginBottom = '5px';
+    tooltipTitle.textContent = title;
+    tooltip.appendChild(tooltipTitle);
+    
+    const list = document.createElement('div');
+    list.className = 'couples-tooltip-list';
+    pairs.forEach(pair => {
+        const pairElement = document.createElement('div');
+        pairElement.style.marginBottom = '3px';
+        pairElement.textContent = pair;
+        list.appendChild(pairElement);
+    });
+    tooltip.appendChild(list);
+    
+    document.body.appendChild(tooltip);
+    return tooltip;
+}
+
+// Modify the generateCouplesByRaceStats function to include the tooltip functionality
+function generateCouplesByRaceStats(container) {
+    fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
+        .then(response => response.text())
+        .then(text => {
+            const lines = text.split('\n').filter(line => line.trim());
+            const racePairs = {};
+            const racePairDetails = {}; // To store the actual couples for each race pair
+            const processedPairs = new Set();
+
+            lines.forEach(line => {
+                if (line.startsWith('-') || line.startsWith('Natanielis Jaunesnysis') || 
+                    line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
+                    return;
+                }
+                
+                const parts = line.split('\t');
+                if (parts.length >= 4) {
+                    const source = parts[0].trim();
+                    const target = parts[1].trim();
+                    const type = parseInt(parts[3]);
+                    
+                    if (type === 3) { // Romantic partners
+                        const pairKey = [source, target].sort().join('|');
+                        
+                        if (!processedPairs.has(pairKey)) {
+                            processedPairs.add(pairKey);
+                            const race1 = characterData[source]?.race || 'other';
+                            const race2 = characterData[target]?.race || 'other';
+                            const racePairKey = [race1, race2].sort().join('+');
+                            
+                            racePairs[racePairKey] = (racePairs[racePairKey] || 0) + 1;
+                            
+                            // Store the actual couple names
+                            if (!racePairDetails[racePairKey]) {
+                                racePairDetails[racePairKey] = [];
+                            }
+                            racePairDetails[racePairKey].push(`${source} & ${target}`);
+                        }
+                    }
+                }
+            });
+
+            const displayData = Object.entries(racePairs)
+                .map(([pair, count]) => {
+                    const [race1, race2] = pair.split('+');
+                    return {
+                        pair: `${race1.charAt(0).toUpperCase() + race1.slice(1)} + ${race2.charAt(0).toUpperCase() + race2.slice(1)}`,
+                        count,
+                        race1,
+                        race2,
+                        pairKey: pair,
+                        couples: racePairDetails[pair] || []
+                    };
+                })
+                .sort((a, b) => b.count - a.count);
+
+            const statBox = document.createElement('div');
+            statBox.className = 'stat-box couples-box';
+
+            const header = document.createElement('div');
+            header.className = 'stat-header';
+            header.innerHTML = `<span class="toptenname">Romantic Couples by Species</span>`;
+            statBox.appendChild(header);
+
+            const listContainer = document.createElement('div');
+            listContainer.className = 'stat-list couples-list';
+
+            displayData.forEach((item, index) => {
+                const coupleItem = document.createElement('div');
+                coupleItem.className = 'couples-item';
+
+                // Left side - rank and race pair
+                const coupleInfo = document.createElement('div');
+                coupleInfo.className = 'couples-info';
+
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'couples-rank';
+                rankSpan.textContent = `${index + 1}.`;
+
+                const race1Element = document.createElement('span');
+                race1Element.className = `stat-name ${raceColors[item.race1] || 'race-other'}`;
+                race1Element.textContent = item.race1.charAt(0).toUpperCase() + item.race1.slice(1);
+
+                const plusElement = document.createElement('span');
+                plusElement.className = 'couples-plus';
+                plusElement.textContent = ' & ';
+
+                const race2Element = document.createElement('span');
+                race2Element.className = `stat-name ${raceColors[item.race2] || 'race-other'}`;
+                race2Element.textContent = item.race2.charAt(0).toUpperCase() + item.race2.slice(1);
+
+                coupleInfo.appendChild(rankSpan);
+                coupleInfo.appendChild(race1Element);
+                coupleInfo.appendChild(plusElement);
+                coupleInfo.appendChild(race2Element);
+
+                // Right side - bar and count
+                const visualContainer = document.createElement('div');
+                visualContainer.className = 'couples-visual';
+
+                const barContainer = document.createElement('div');
+                barContainer.className = 'couples-bar-container';
+
+                const bar = document.createElement('div');
+                bar.className = 'couples-bar';
+                bar.style.width = `${Math.min(100, (item.count / displayData[0].count) * 100)}%`;
+              
+                // Create tooltip for this bar
+                const tooltip = createCouplesTooltip(item.couples, item.pair);
+                
+                bar.addEventListener('mouseenter', (e) => {
+                    tooltip.style.display = 'block';
+                    // Position the tooltip near the cursor
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                });
+                
+                bar.addEventListener('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                });
+                
+                bar.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                });
+
+                barContainer.appendChild(bar);
+
+                const countLabel = document.createElement('span');
+                countLabel.className = 'couples-count';
+                countLabel.textContent = item.count;
+
+                visualContainer.appendChild(barContainer);
+                visualContainer.appendChild(countLabel);
+
+                coupleItem.appendChild(coupleInfo);
+                coupleItem.appendChild(visualContainer);
+                listContainer.appendChild(coupleItem);
+            });
+
+            statBox.appendChild(listContainer);
+            container.appendChild(statBox);
+        })
+        .catch(error => console.error("Error loading relationship data:", error));
+}
+
+// Modify the generateCouplesByGenderStats function similarly
+function generateCouplesByGenderStats(container) {
+    fetch('https://raw.githubusercontent.com/nedoramoteris/forksfc/refs/heads/main/veidai.txt')
+        .then(response => response.text())
+        .then(genderText => {
+            const genderMap = {};
+            const genderLines = genderText.split('\n').filter(line => line.trim());
+            
+            genderLines.forEach(line => {
+                const parts = line.split('\t');
+                if (parts.length >= 3) {
+                    const name = parts[1].trim();
+                    const gender = parts[2].trim().toLowerCase();
+                    if (gender === 'male' || gender === 'female') {
+                        genderMap[name] = gender;
+                    }
+                }
+            });
+
+            return fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/Points.txt')
+                .then(response => response.text())
+                .then(text => {
+                    const lines = text.split('\n').filter(line => line.trim());
+                    const genderPairs = {
+                        'male+male': { count: 0, couples: [] },
+                        'male+female': { count: 0, couples: [] },
+                        'female+female': { count: 0, couples: [] }
+                    };
+                    const processedPairs = new Set();
+
+                    lines.forEach(line => {
+                        if (line.startsWith('-') || line.startsWith('Natanielis Jaunesnysis') || 
+                            line.startsWith('AUGINTINIAI') || line.startsWith('THE ORIGINAL ITALAI')) {
+                            return;
+                        }
+                        
+                        const parts = line.split('\t');
+                        if (parts.length >= 4) {
+                            const source = parts[0].trim();
+                            const target = parts[1].trim();
+                            const type = parseInt(parts[3]);
+                            
+                            if (type === 3) { // Romantic partners
+                                const pairKey = [source, target].sort().join('|');
+                                
+                                if (!processedPairs.has(pairKey)) {
+                                    processedPairs.add(pairKey);
+                                    const gender1 = genderMap[source] || 'unknown';
+                                    const gender2 = genderMap[target] || 'unknown';
+                                    
+                                    if (gender1 !== 'unknown' && gender2 !== 'unknown') {
+                                        const genderPairKey = [gender1, gender2].sort().join('+');
+                                        const displayPair = `${source} & ${target}`;
+                                        
+                                        if (genderPairKey === 'male+male') {
+                                            genderPairs['male+male'].count++;
+                                            genderPairs['male+male'].couples.push(displayPair);
+                                        } else if (genderPairKey === 'female+female') {
+                                            genderPairs['female+female'].count++;
+                                            genderPairs['female+female'].couples.push(displayPair);
+                                        } else {
+                                            genderPairs['male+female'].count++;
+                                            genderPairs['male+female'].couples.push(displayPair);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const displayData = [
+                        { 
+                            label: 'Male + Female', 
+                            count: genderPairs['male+female'].count, 
+                            key: 'male+female',
+                            couples: genderPairs['male+female'].couples
+                        },
+                        { 
+                            label: 'Female + Female', 
+                            count: genderPairs['female+female'].count, 
+                            key: 'female+female',
+                            couples: genderPairs['female+female'].couples
+                        },
+                        { 
+                            label: 'Male + Male', 
+                            count: genderPairs['male+male'].count, 
+                            key: 'male+male',
+                            couples: genderPairs['male+male'].couples
+                        }
+                    ].sort((a, b) => b.count - a.count);
+
+                    const statBox = document.createElement('div');
+                    statBox.className = 'stat-box couples-gender-box';
+
+                    const header = document.createElement('div');
+                    header.className = 'stat-header';
+                    header.innerHTML = `<span class="toptenname">Romantic Couples by Gender</span>`;
+                    statBox.appendChild(header);
+
+                    const listContainer = document.createElement('div');
+                    listContainer.className = 'stat-list couples-gender-list';
+
+                    displayData.forEach((item, index) => {
+                        const coupleItem = document.createElement('div');
+                        coupleItem.className = 'couples-gender-item';
+
+                        // Left side - label
+                        const labelSpan = document.createElement('span');
+                        labelSpan.className = 'couples-gender-label';
+                        labelSpan.textContent = item.label;
+
+                        // Right side - bar and count
+                        const visualContainer = document.createElement('div');
+                        visualContainer.className = 'couples-gender-visual';
+
+                        const barContainer = document.createElement('div');
+                        barContainer.className = 'couples-gender-bar-container';
+
+                        const bar = document.createElement('div');
+                        bar.className = 'couples-gender-bar';
+                        bar.style.width = `${Math.min(100, (item.count / Math.max(1, displayData[0].count)) * 100)}%`;
+                        
+                        // Different colors for different pairings
+                        if (item.key === 'male+male') {
+                            bar.style.background = '#4c4957';
+                        } else if (item.key === 'female+female') {
+                            bar.style.background = '#b58d84';
+                        } else {
+                            bar.style.background = 'linear-gradient(to right, #4c4957, #b58d84)';
+                        }
+
+                        // Create tooltip for this bar
+                        const tooltip = createCouplesTooltip(item.couples, item.label);
+                        
+                        bar.addEventListener('mouseenter', (e) => {
+                            tooltip.style.display = 'block';
+                            tooltip.style.left = `${e.pageX + 10}px`;
+                            tooltip.style.top = `${e.pageY + 10}px`;
+                        });
+                        
+                        bar.addEventListener('mouseleave', () => {
+                            tooltip.style.display = 'none';
+                        });
+                        
+                        bar.addEventListener('mousemove', (e) => {
+                            tooltip.style.left = `${e.pageX + 10}px`;
+                            tooltip.style.top = `${e.pageY + 10}px`;
+                        });
+
+                        barContainer.appendChild(bar);
+
+                        const countLabel = document.createElement('span');
+                        countLabel.className = 'couples-gender-count';
+                        countLabel.textContent = item.count;
+
+                        visualContainer.appendChild(barContainer);
+                        visualContainer.appendChild(countLabel);
+
+                        coupleItem.appendChild(labelSpan);
+                        coupleItem.appendChild(visualContainer);
+                        listContainer.appendChild(coupleItem);
+                    });
+
+                    statBox.appendChild(listContainer);
+                    container.appendChild(statBox);
+
+                    return genderPairs['male+male'].count + genderPairs['male+female'].count + genderPairs['female+female'].count;
+                });
+        })
+        .then(totalCouples => {
+            const totalBox = document.createElement('div');
+            totalBox.className = 'stat-box total-couples-box';
+
+            const header = document.createElement('div');
+            header.className = 'stat-header';
+            header.innerHTML = `<span class="toptenname">Total Romantic Couples</span>`;
+            totalBox.appendChild(header);
+
+            const countDisplay = document.createElement('div');
+            countDisplay.className = 'total-couples-count';
+            countDisplay.textContent = totalCouples;
+            totalBox.appendChild(countDisplay);
+
+            container.appendChild(totalBox);
+        })
+        .catch(error => console.error("Error loading relationship data:", error));
+}
+
+// Add CSS for the tooltip
+const style = document.createElement('style');
+style.textContent = `
+
+`;
+document.head.appendChild(style);
