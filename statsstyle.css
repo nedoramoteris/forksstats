@@ -722,37 +722,35 @@ color:#6E6761 !important;
     margin-bottom: 20px;
 }
 /* Add this to your fuckyourentirefamily.txt file */
-.species-country-box::-webkit-scrollbar {
+.species-country-viz::-webkit-scrollbar {
     width: 5px;
 }
 
-.species-country-box::-webkit-scrollbar-track {
+.species-country-viz::-webkit-scrollbar-track {
     background: #33312e;
     border-radius: 3px;
 }
 
-.species-country-box::-webkit-scrollbar-thumb {
+.species-country-viz::-webkit-scrollbar-thumb {
     background: #6E6761;
     border-radius: 3px;
 }
 
-.dark-mode .species-country-box::-webkit-scrollbar-track {
+.dark-mode .species-country-viz::-webkit-scrollbar-track {
     background: #e0e0e0;
 }
 
-.dark-mode .species-country-box::-webkit-scrollbar-thumb {
+.dark-mode .species-country-viz::-webkit-scrollbar-thumb {
     background: #999;
 }
 .species-country-box {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    height: 230px;
-  overflow-y: auto;
   margin-left:-13px;
-  
 }
+.species-country-viz {    height: 180px; overflow:auto;}
 .species-country-card {
-    min-height: 120px;
+    min-height: 10px;
 }
 
 .species-country-card:hover {
