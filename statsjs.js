@@ -1745,3 +1745,138 @@ function generateSpeciesCountryStats() {
 document.addEventListener("DOMContentLoaded", function() {
     setTimeout(generateSpeciesCountryStats, 1000);
 });
+
+// Create Table of Contents
+function createTableOfContents() {
+    const tocContainer = document.createElement('div');
+    tocContainer.className = 'toc-container';
+    
+    const tocHeader = document.createElement('div');
+    tocHeader.className = 'toc-header';
+    tocHeader.textContent = 'Table of Contents';
+    tocContainer.appendChild(tocHeader);
+    
+    const tocList = document.createElement('ul');
+    tocList.className = 'toc-list';
+    
+    // Main sections
+    const sections = [
+        { 
+            title: 'Relationship Stats', 
+            selector: '.stats-container', 
+            
+        },
+        { 
+            title: 'Top Lists', 
+            selector: '.top-lists-container',
+            subsections: [
+                { title: 'Most Controversial', selector: '.controversial-box' },
+                { title: 'Sluttiest Characters', selector: '.promiscuity-box' }
+            ]
+        },
+        { 
+            title: 'Distributions', 
+            selector: '.distribution-container',
+            subsections: [
+                { title: 'By Species', selector: '.race-box' },
+                { title: 'By Country', selector: '.country-box' },
+                { title: 'By Gender', selector: '.gender-box' },
+                { title: 'Species by Gender', selector: '.species-gender-box' }
+            ]
+        },
+        { 
+            title: 'Couples Stats', 
+            selector: '.couples-container',
+            subsections: [
+                { title: 'By Species', selector: '.couples-box' },
+                { title: 'By Gender', selector: '.couples-gender-box' },
+                { title: 'Total Count', selector: '.total-couples-box' }
+            ]
+        },
+        { 
+            title: 'Species by Country', 
+            selector: '.species-country-container'
+        }
+    ];
+    
+    sections.forEach(section => {
+        const tocItem = document.createElement('li');
+        tocItem.className = 'toc-item';
+        
+        const tocLink = document.createElement('a');
+        tocLink.className = 'toc-link';
+        tocLink.href = '#';
+        tocLink.textContent = section.title;
+        tocLink.dataset.target = section.selector;
+        
+        tocLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector(section.selector).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        tocItem.appendChild(tocLink);
+        
+        if (section.subsections && section.subsections.length) {
+            const subList = document.createElement('ul');
+            subList.className = 'toc-sublist';
+            
+            section.subsections.forEach(subsection => {
+                const subItem = document.createElement('li');
+                subItem.className = 'toc-item';
+                
+                const subLink = document.createElement('a');
+                subLink.className = 'toc-link';
+                subLink.href = '#';
+                subLink.textContent = subsection.title;
+                subLink.dataset.target = subsection.selector;
+                
+                subLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelector(subsection.selector).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+                
+                subItem.appendChild(subLink);
+                subList.appendChild(subItem);
+            });
+            
+            tocItem.appendChild(subList);
+        }
+        
+        tocList.appendChild(tocItem);
+    });
+    
+    tocContainer.appendChild(tocList);
+    document.body.appendChild(tocContainer);
+    
+    // Highlight active section
+    function highlightActiveSection() {
+        const sections = document.querySelectorAll('.stat-box, .top-lists-container, .distribution-container, .couples-container, .species-country-container');
+        let activeSection = null;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= 100 && rect.bottom >= 100) {
+                activeSection = section;
+            }
+        });
+        
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.classList.remove('active');
+            if (activeSection && link.dataset.target && activeSection.matches(link.dataset.target)) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', highlightActiveSection);
+    highlightActiveSection(); // Initial highlight
+}
+
+// Call the function after DOM is loaded
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(createTableOfContents, 1500); // Delay to ensure all content is loaded
+});
