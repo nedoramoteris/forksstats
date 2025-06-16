@@ -655,7 +655,8 @@ margin-left:5px;
     background: rgba(224, 224, 224, 0.1);
 }
 
-.disclaimeris {color:#9e3b3b;
+.disclaimeris {display:none;
+    color:#9e3b3b;
     border-radius: 7px;
     padding: 15px;
     font-size:12px;
