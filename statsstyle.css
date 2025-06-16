@@ -784,3 +784,114 @@ color:#6E6761 !important;
         width: 100% !important;
     }
 }
+
+/* Table of Contents */
+.toc-container {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 180px;
+    border-radius: 7px;
+    padding: 15px;
+    z-index: 100;
+    max-height: none;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+.dark-mode .toc-container {
+    background: rgba(245, 245, 245, 0.7);
+}
+
+.toc-header {
+    font-family: 'Lemon/Milk light', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #444;
+    color: #6E6761;
+    text-align: center;
+}
+
+.dark-mode .toc-header {
+    border-bottom-color: #e0e0e0;
+    color: #333;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin-bottom: 8px;
+    font-size: 9px;
+}
+
+.toc-link {
+    color: #6E6761;
+    text-decoration: none;
+    display: block;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.dark-mode .toc-link {
+    color: #666;
+}
+
+.toc-link:hover {
+    background-color: #33312e;
+    transform: translateX(5px);
+    color: #b58d84;
+}
+
+.dark-mode .toc-link:hover {
+    background-color: #f0f0f0;
+    color: #944444;
+}
+
+.toc-link.active {
+    font-weight: bold;
+    color: #b58d84;
+    background-color: #33312e;
+}
+
+.dark-mode .toc-link.active {
+    color: #944444;
+    background-color: #f0f0f0;
+}
+
+.toc-sublist {
+    list-style: none;
+    padding-left: 15px;
+    margin-top: 5px;
+    border-left: 1px solid #444;
+}
+
+.dark-mode .toc-sublist {
+    border-left-color: #e0e0e0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .toc-container {
+        left: 10px;
+        width: 140px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .toc-container {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-height: none;
+        margin-bottom: 20px;
+        order: -1;
+    }
+}
