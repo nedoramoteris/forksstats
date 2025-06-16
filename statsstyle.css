@@ -877,7 +877,7 @@ color:#6E6761 !important;
     color: #944444;
 }
 
-
+.toc-link.active {background-color: #33312e;}
 
 .dark-mode .toc-link.active {
     color: #944444;
