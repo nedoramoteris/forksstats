@@ -1,3 +1,4 @@
+
 // Relationship type definitions
 const relationshipTypes = [
     { id: 0, name: "Former Partners", color: "#91796e" },
