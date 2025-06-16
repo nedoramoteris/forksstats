@@ -1566,3 +1566,182 @@ style.textContent = `
 
 `;
 document.head.appendChild(style);
+
+// ======================
+// ACCURATE SPECIES BY COUNTRY STATS (FIXED)
+// ======================
+
+function generateSpeciesCountryStats() {
+    // Create container
+    const container = document.createElement('div');
+    container.className = 'species-country-container';
+    container.style.width = '1150px';
+    container.style.margin = '20px auto';
+    document.getElementById('stats-container').appendChild(container);
+
+    // Create the stats box
+    const statBox = document.createElement('div');
+    statBox.className = 'stat-box species-country-box';
+    statBox.style.width = '1150px';
+    container.appendChild(statBox);
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'stat-header';
+    header.innerHTML = `<span class="toptenname">Species Distribution by Country</span>`;
+    statBox.appendChild(header);
+
+    // First build a name-to-country map from countries.txt
+    const nameToCountry = {};
+    const countryCounts = {};
+    
+    // Process countries data
+    fetch('https://raw.githubusercontent.com/nedoramoteris/voratinklis/refs/heads/main/countries.txt')
+        .then(response => response.text())
+        .then(text => {
+            text.split('\n').forEach(line => {
+                const parts = line.split('\t');
+                if (parts.length >= 3) {
+                    const name = parts[0].trim();
+                    const country = parts[2].trim();
+                    if (name && country) {
+                        nameToCountry[name] = country;
+                        countryCounts[country] = (countryCounts[country] || 0) + 1;
+                    }
+                }
+            });
+            
+            // Now process species data from characterData (already populated from avatarai.txt)
+            const stats = {};
+            
+            for (const [name, data] of Object.entries(characterData)) {
+                const country = nameToCountry[name];
+                if (country && data.race) {
+                    if (!stats[country]) {
+                        stats[country] = {};
+                    }
+                    stats[country][data.race] = (stats[country][data.race] || 0) + 1;
+                }
+            }
+
+            // Prepare display data (sorted by total characters - matching country distribution)
+            const displayData = Object.entries(stats)
+                .map(([country, races]) => ({
+                    country,
+                    races,
+                    total: countryCounts[country] || 0 // Use the exact count from countries.txt
+                }))
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 50);
+
+            // Create the visualization
+            const vizContainer = document.createElement('div');
+            vizContainer.className = 'species-country-viz';
+            vizContainer.style.display = 'flex';
+            vizContainer.style.flexWrap = 'wrap';
+            vizContainer.style.gap = '15px';
+            vizContainer.style.marginTop = '15px';
+
+            displayData.forEach(item => {
+                const countryCard = document.createElement('div');
+                countryCard.className = 'species-country-card';
+                countryCard.style.width = '195px';
+                countryCard.style.background = 'rgba(41, 39, 37, 0.7)';
+                countryCard.style.borderRadius = '5px';
+                countryCard.style.padding = '10px';
+                countryCard.style.transition = 'transform 0.3s ease';
+                countryCard.style.fontSize = '11px';
+
+                countryCard.innerHTML = `
+                    <div class="species-country-header" style="font-weight:bold; margin-bottom:5px; font-size:12px;">
+                        ${item.country} <span style="float:right; font-weight:normal;">${item.total}</span>
+                    </div>
+                `;
+
+                // Sort species by count (descending) and take top 3
+                const sortedRaces = Object.entries(item.races)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 50);
+
+                sortedRaces.forEach(([race, count]) => {
+                    const raceRow = document.createElement('div');
+                    raceRow.style.display = 'flex';
+                    raceRow.style.alignItems = 'center';
+                    raceRow.style.marginBottom = '3px';
+                    raceRow.style.fontSize = '11px';
+
+                    const raceName = document.createElement('span');
+                    raceName.className = `stat-name ${raceColors[race] || 'race-other'}`;
+                    raceName.textContent = race.charAt(0).toUpperCase() + race.slice(1);
+                    raceName.style.width = '70px';
+                    raceName.style.overflow = 'hidden';
+                    raceName.style.textOverflow = 'ellipsis';
+                    raceName.style.whiteSpace = 'nowrap';
+
+                    const barContainer = document.createElement('div');
+                    barContainer.style.flexGrow = '1';
+                    barContainer.style.margin = '0 5px';
+                    barContainer.style.height = '10px';
+                    barContainer.style.background = 'rgba(110, 103, 97, 0.1)';
+                    barContainer.style.borderRadius = '4px';
+                    barContainer.style.overflow = 'hidden';
+
+                    const bar = document.createElement('div');
+                    bar.style.height = '100%';
+                    bar.style.width = `${(count / item.total) * 100}%`;
+                    bar.style.borderRadius = '4px';
+                    
+                    // Get the color for this race
+                    const raceElement = document.createElement('span');
+                    raceElement.className = `stat-name ${raceColors[race] || 'race-other'}`;
+                    document.body.appendChild(raceElement);
+                    const color = window.getComputedStyle(raceElement).color;
+                    document.body.removeChild(raceElement);
+                    
+                    bar.style.background = color;
+
+                    const countLabel = document.createElement('span');
+                    countLabel.style.width = '20px';
+                    countLabel.style.textAlign = 'right';
+                    countLabel.style.fontSize = '10px';
+                    countLabel.textContent = count;
+
+                    barContainer.appendChild(bar);
+                    raceRow.appendChild(raceName);
+                    raceRow.appendChild(barContainer);
+                    raceRow.appendChild(countLabel);
+                    countryCard.appendChild(raceRow);
+                });
+
+                // Show "+X more" if there are additional species
+                if (Object.keys(item.races).length > 50) {
+                    const moreText = document.createElement('div');
+                    moreText.style.fontSize = '10px';
+                    moreText.style.color = '#6E6761';
+                    moreText.style.textAlign = 'right';
+                    moreText.style.marginTop = '3px';
+                    moreText.textContent = `+${Object.keys(item.races).length - 3} more`;
+                    countryCard.appendChild(moreText);
+                }
+
+                vizContainer.appendChild(countryCard);
+            });
+
+            statBox.appendChild(vizContainer);
+
+            // Add hover effects
+            document.querySelectorAll('.species-country-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-3px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'none';
+                });
+            });
+        });
+}
+
+// Call the function after all other stats are loaded
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(generateSpeciesCountryStats, 1000);
+});
