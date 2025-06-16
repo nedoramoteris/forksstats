@@ -715,3 +715,72 @@ color:#6E6761 !important;
 .couples-tooltip-list div:last-child {
     border-bottom: none;
 }
+
+/* Compact Species by Country Styles */
+.species-country-container {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.species-country-box {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    height: auto !important;
+  margin-left:-13px;
+}
+
+.species-country-card {
+    min-height: 120px;
+}
+
+.species-country-card:hover {
+    background: rgba(41, 39, 37, 0.9) !important;
+}
+
+.dark-mode .species-country-card {
+    background: rgba(245, 245, 245, 0.7) !important;
+}
+
+.dark-mode .species-country-card:hover {
+    background: rgba(245, 245, 245, 0.9) !important;
+}
+
+.species-country-header {
+    border-bottom: 1px solid #444;
+    padding-bottom: 3px;
+    font-size: 12px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark-mode .species-country-header {
+    border-bottom-color: #e0e0e0;
+}
+
+.species-country-header span {
+    color: #6E6761;
+    font-size: 11px !important;
+}
+
+.dark-mode .species-country-header span {
+    color: #666;
+}
+
+@media (max-width: 1200px) {
+    .species-country-card {
+        width: calc(33% - 15px) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .species-country-card {
+        width: calc(50% - 15px) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .species-country-card {
+        width: 100% !important;
+    }
+}
