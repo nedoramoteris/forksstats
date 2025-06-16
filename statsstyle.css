@@ -822,6 +822,7 @@ color:#6E6761 !important;
 
 
 .toc-header {
+  display:none;
     font-family: 'Lemon/Milk light', sans-serif;
     letter-spacing: 1px;
     font-size: 12px;
@@ -864,19 +865,18 @@ color:#6E6761 !important;
 .toc-link:hover {
     background-color: #33312e;
     transform: translateX(5px);
-    color: #b58d84;
 }
+.toc-link a:hover{    color: white;
+  background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;}
 
 .dark-mode .toc-link:hover {
     background-color: #f0f0f0;
     color: #944444;
 }
 
-.toc-link.active {
-    font-weight: bold;
-    color: #b58d84;
-    background-color: #33312e;
-}
+
 
 .dark-mode .toc-link.active {
     color: #944444;
