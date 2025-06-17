@@ -807,7 +807,7 @@ color:#6E6761 !important;
 }
 
 /* Table of Contents */
-.toc-container {
+.toc-container {display:none;
     position: fixed;
     left: 0px;
     top: 30%;
