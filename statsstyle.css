@@ -1,3 +1,9 @@
+:root {
+  --baby-gradient: linear-gradient(to right, #444b44, #9c8672);
+}
+:root {
+  --daddy-gradient: linear-gradient(to right, #444b44, #9c8672, #444b44);}
+
 body, html {
     background-color: #21211F;
     font-family: 'Montserrat', sans-serif;
@@ -16,13 +22,13 @@ body, html {
     max-width: 1200px;
     margin: 0 auto;
 }
-.toptenname {background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+.toptenname {background-image: var(--daddy-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;}
 h1 {
     font-family: 'Lemon/Milk light', sans-serif;
     letter-spacing: 1px;
-    background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+    background-image: var(--daddy-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 30px;
@@ -686,7 +692,7 @@ margin-left:5px;
 }
 
 .skaiciukai {color: white;
-  background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+  background-image: var(--daddy-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 font-weight:bold;
@@ -868,7 +874,7 @@ color:#6E6761 !important;
     transform: translateX(5px);
 }
 .toc-link a:hover{    color: white;
-  background-image: linear-gradient(to right, #A8B9BF, #BFA980, #b58d84);
+  background-image: var(--daddy-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;}
 
