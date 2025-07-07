@@ -44,7 +44,20 @@ const extraOneNightStands = {
     'Michael Romeo Harlow': 310,
     'Venetia Irida Dragoumis': 3,
     'Emery Herman Bernhard': 39,
-    'Randall Frank Dreschler': 495
+    'Randall Frank Dreschler': 495,
+    'Anastasia Clara Blackwell': 2,
+'Arya Natalie Davenport': 248,
+'Aurora Vivienne Boucher': 33,
+'Camille Lillian Boucher': 392,
+'Daniel Apollo Dreschler': 4,
+'Deianeira Cecilia Lund': 164,
+'Declan Aidan Bernhard': 296,
+'Harper Adriana Esposito': 82,
+'Juliette Claire Lefèvre': 8,
+'Salvatore Edoardo Moretti': 179,
+'Theodore Percival Hayes': 3,
+'West Elliot Harlow': 222,
+'Zachariah Gideon Lund': 15
 };
 
 // Dark mode toggle functionality
@@ -297,9 +310,10 @@ function generateStatistics(relationships) {
         if (relType.id === 1) {
             const draugaiPairs = [
                 { main: 'Katrina Deva Bianchi', draugai: 'Katrinos Draugai' },
-                { main: 'Arya Natalie Davenport', draugai: 'Arijos Draugai' },
+                { main: 'Aurora Vivienne Boucher', draugai: 'Katrinos Draugai' },
+                { main: 'Arya Natalie Davenport', draugai: 'Auroros Draugai' },
                 { main: 'Demetria Nadira Harlow', draugai: 'Demetrijos Draugai' },
-                { main: 'Florence Elise Winslow', draugai: 'Florencijos draugei' },
+                { main: 'Florence Elise Winslow', draugai: 'Florencijos Draugai' },
                 { main: 'Lennon Therasia Windsor', draugai: 'Lenon Draugai' },
                 { main: 'Leone Battista Dalmonte', draugai: 'Leono Draugai' },
                 { main: 'West Elliot Harlow', draugai: 'Vesto Draugai' }
@@ -314,7 +328,7 @@ function generateStatistics(relationships) {
                 }
             });
             
-            ['Katrina Deva Bianchi', 'Arya Natalie Davenport', 'West Elliot Harlow', 
+            ['Katrina Deva Bianchi', 'Aurora Vivienne Boucher', 'Arya Natalie Davenport', 'West Elliot Harlow', 
              'Leone Battista Dalmonte', 'Lennon Therasia Windsor'].forEach(character => {
                 if (relCounts[character]) {
                     relCounts[character] = Math.max(0, relCounts[character] - 2);
