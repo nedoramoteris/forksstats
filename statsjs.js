@@ -310,8 +310,8 @@ function generateStatistics(relationships) {
         if (relType.id === 1) {
             const draugaiPairs = [
                 { main: 'Katrina Deva Bianchi', draugai: 'Katrinos Draugai' },
-                { main: 'Aurora Vivienne Boucher', draugai: 'Katrinos Draugai' },
-                { main: 'Arya Natalie Davenport', draugai: 'Auroros Draugai' },
+                { main: 'Aurora Vivienne Boucher', draugai: 'Auroros Draugai' },
+                { main: 'Arya Natalie Davenport', draugai: 'Arijos Draugai' },
                 { main: 'Demetria Nadira Harlow', draugai: 'Demetrijos Draugai' },
                 { main: 'Florence Elise Winslow', draugai: 'Florencijos Draugai' },
                 { main: 'Lennon Therasia Windsor', draugai: 'Lenon Draugai' },
