@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Display the character count
             const countElement = document.createElement('div');
 countElement.className = 'character-count';
-countElement.innerHTML = `“In the state of Washington, under a near constant cover of clouds and rain, there's a small town named Forks. Population, <span class="skaiciukai">${characterCount}</span> people. This is where I'm moving.”`;
+countElement.innerHTML = `“In the state of Washington, under a near constant cover of clouds and rain, there's a small town named Forks. Population: <span class="skaiciukai">${characterCount}</span> people. This is where I'm moving.”`;
 document.querySelector('.container').insertBefore(countElement, document.querySelector('.stats-container'));
             document.querySelector('.container').insertBefore(countElement, document.querySelector('.stats-container'));
             
